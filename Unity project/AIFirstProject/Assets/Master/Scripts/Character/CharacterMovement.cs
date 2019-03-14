@@ -9,12 +9,14 @@ public class CharacterMovement : MonoBehaviour
     public float turnSpeed = 20f;
 
     private Rigidbody rb;
+    private Animator anim;
     private Vector3 moveInput;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
         moveInput = Vector3.zero;
     }
 
@@ -52,5 +54,7 @@ public class CharacterMovement : MonoBehaviour
 
             rb.MoveRotation(Quaternion.Lerp(rb.rotation, turn, Time.deltaTime * turnSpeed));
         }
+
+        anim.SetFloat("Speed", moveInput.magnitude);
     }
 }
