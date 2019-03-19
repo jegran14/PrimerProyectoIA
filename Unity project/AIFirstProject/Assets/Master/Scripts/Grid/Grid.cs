@@ -8,7 +8,7 @@ public class Grid : MonoBehaviour
     public Vector2 gridWorldSize;
     public float nodeRadious;
 
-    private Node[,] grid;
+    private GridNode[,] grid;
 
     private void OnDrawGizmos()
     {
