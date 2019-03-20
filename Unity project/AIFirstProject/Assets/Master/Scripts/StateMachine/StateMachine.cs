@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Clase encargada de la máquina de estados
 public class StateMachine : MonoBehaviour
 {
-    public State currentState;
+    [Tooltip("Estado inicial del personaje")]
+    public State initialState;
+    [Tooltip("Activar/Desactivar maquina de esados")]
     public bool aiActive = false;
+    [HideInInspector]
+    public State currentState; //Estado actual de la máquina de estados
 
-    [HideInInspector] public AIController controller;
+    [HideInInspector] public AIController controller; //Referencia al controlador de la IA
+
+    private void Start()
+    {
+        currentState = initialState;
+    }
 
     private void Update()
     {
@@ -17,12 +27,11 @@ public class StateMachine : MonoBehaviour
         currentState.UpdateState(controller);
     }
 
-    private void OnDrawGizmos()
+    public void TransitionToState(State nextState)
     {
-        if(currentState != null)
+        if(currentState != nextState)
         {
-            Gizmos.color = currentState.sceneGizmoColor;
-            Gizmos.DrawWireSphere(transform.position, controller.viewRadius);
+            currentState = nextState;
         }
     }
 }
