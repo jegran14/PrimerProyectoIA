@@ -21,8 +21,13 @@ public class NPCEditor : Editor
 
             Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.viewRadius);
             Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
-
             Handles.DrawSolidArc(fow.transform.position, Vector3.up, viewAngleA, fow.viewAngle, fow.viewRadius);
+
+            if(fow.chaseTarget != null)
+            {
+                Handles.color = Color.red;
+                Handles.DrawLine(fow.transform.position, fow.chaseTarget.position);
+            }
         }
     }
 }

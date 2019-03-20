@@ -10,7 +10,6 @@ public abstract class AIController : MonoBehaviour
     public float viewRadius = 1f;
     [Tooltip("Angulo de vision del personaje")]
     public float viewAngle = 90f;
-    [Space]
 
     [Header("Propiedades de patrulla")]
     [Tooltip("Lista de waypoints a los que el NPC debe moverse en caso de patrulla")]
