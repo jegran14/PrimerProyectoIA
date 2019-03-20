@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CopStateMachine : MonoBehaviour
+[RequireComponent(typeof(StateMachine))]
+public class CopStateManager : AIController
 {
-    private StateMachine stateMachine = new StateMachine();
+    public float viewRadious = 1f;
 
-    private void Start()
+    private StateMachine stateMachine;
+
+    private void Awake()
     {
-        this.stateMachine.ChangeState(new State_Example());
-        //aqui inicializariamos con el state Patrulla
+        stateMachine = GetComponent<StateMachine>();
     }
 
-    private void Update()
+    public override void MoveTo(Vector3 point)
     {
-        this.stateMachine.ExecuteStateUpdate();
+        //Move character
     }
-
 }

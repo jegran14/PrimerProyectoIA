@@ -4,35 +4,25 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    private IState currentlyRunningState;
-    private IState previousState;
+    public State currentState;
+    public bool aiActive = false;
 
-    public void ChangeState(IState newState)
+    [HideInInspector] public AIController controller;
+
+    private void Update()
     {
-        if (this.currentlyRunningState != null)
-        {
-            this.currentlyRunningState.Exit();
-        }
+        if (!aiActive)
+            return;
 
-        this.previousState = this.currentlyRunningState;
-        this.currentlyRunningState = newState;
-        this.currentlyRunningState.Enter();
+        currentState.UpdateState(controller);
     }
 
-    public void ExecuteStateUpdate()
+    private void OnDrawGizmos()
     {
-        var runningState = this.currentlyRunningState;
-        if (runningState != null)
+        if(currentState != null)
         {
-            runningState.Execute();
+            Gizmos.color = currentState.sceneGizmoColor;
+            Gizmos.DrawWireSphere(transform.position, controller.viewRadius);
         }
-
-    }
-
-    public void SwitchToPreviousState()
-    {
-        this.currentlyRunningState.Exit();
-        this.currentlyRunningState = this.previousState;
-        this.currentlyRunningState.Enter();
     }
 }

@@ -25,7 +25,7 @@ public class Grid : MonoBehaviour
 
     private void CreateGrid()
     {
-        grid = new Node[gridSizeX, gridSizeY];
+        grid = new GridNode[gridSizeX, gridSizeY];
 
 
         Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
@@ -35,12 +35,12 @@ public class Grid : MonoBehaviour
             {
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
-                grid[x, y] = new Node(walkable, worldPoint);
+                grid[x, y] = new GridNode(walkable, worldPoint);
             }
         }
     }
 
-    public Node NodeFromWorldPoint(Vector3 worldPosition)
+    public GridNode NodeFromWorldPoint(Vector3 worldPosition)
     {
         float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
         float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
@@ -57,8 +57,8 @@ public class Grid : MonoBehaviour
     {       
         if(grid != null)
         {
-            Node playerNode = NodeFromWorldPoint(player.transform.position);
-            foreach(Node n in grid)
+            GridNode playerNode = NodeFromWorldPoint(player.transform.position);
+            foreach(GridNode n in grid)
             {
                 Gizmos.color = (n.walkable) ? Color.white : Color.red;
                 if (playerNode == n)
