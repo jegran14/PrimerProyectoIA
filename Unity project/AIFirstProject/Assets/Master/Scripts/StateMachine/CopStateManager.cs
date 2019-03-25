@@ -14,4 +14,10 @@ public class CopStateManager : AIController
     {
         //Move character
     }
+
+    public override void TransitionToState(State nextState)
+    {
+        fsm.TransitionToState(nextState);
+        //Add if necessary a animation change for the animator
+    }
 }

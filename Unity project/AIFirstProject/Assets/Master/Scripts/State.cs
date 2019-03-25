@@ -37,9 +37,9 @@ public class State : ScriptableObject
             bool transitionSucceded = transitions[i].decision.Decide(controller);
 
             if (transitionSucceded)
-                controller.fsm.TransitionToState(transitions[i].trueState);
+                controller.TransitionToState(transitions[i].trueState);
             else
-                controller.fsm.TransitionToState(transitions[i].falseState);
+                controller.TransitionToState(transitions[i].falseState);
         }
     }
 }

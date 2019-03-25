@@ -18,13 +18,17 @@ public abstract class AIController : MonoBehaviour
     [HideInInspector] public Transform chaseTarget;
     [HideInInspector] public StateMachine fsm;
 
+    private Animator anim;
+
     private void Awake()
     {
         fsm = GetComponent<StateMachine>();
+        anim = GetComponent<Animator>();
         fsm.controller = this;
     }
 
     public abstract void MoveTo(Vector3 point); //Move character, every controller moves the character as they think they should
+    public abstract void TransitionToState(State nextState);
 
     public Vector3 DirFromAngle(float angleInDegrees, bool angleInGlobal)
     {
