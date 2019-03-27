@@ -6,6 +6,7 @@ public class Grid : MonoBehaviour
 {
     /* to set the level, don't forget to put the obstacles in the obstcles layer
      * and the gridWorldSizes manually*/
+    public bool displayGridGizmos;
     public Transform player;
 
     public LayerMask unwalkableMask;
@@ -25,7 +26,7 @@ public class Grid : MonoBehaviour
     }
 
 
-    private void Start()
+    private void Awake()
     {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter); //how many nodes we can fit in the X
@@ -68,18 +69,12 @@ public class Grid : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-        if (grid != null)
+        if (grid != null && displayGridGizmos)
         {
-            GridNode playerNode = NodeFromWorldPoint(player.transform.position);
-            foreach(GridNode n in grid)//visualization of the grid when start is pressed
+            foreach (GridNode n in grid)
             {
                 Gizmos.color = (n.walkable) ? Color.white : Color.red;
-                if (playerNode == n)
-                    Gizmos.color = Color.blue;
-                if (path != null)
-                    if (path.Contains(n))
-                        Gizmos.color = Color.black;
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
+                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter-.1f));
             }
         }
     }
