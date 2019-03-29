@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterMovement))]
+[RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-    private CharacterMovement movement;
+    private PlayerController controller;
     // Start is called before the first frame update
     void Start()
     {
-        movement = GetComponent<CharacterMovement>();
+        controller = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        movement.SetInput(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        controller.SetInput(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
 }

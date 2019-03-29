@@ -5,56 +5,47 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterMovement : MonoBehaviour
 {
+    [Tooltip("Velocidad de movimiento del jugador")]
     public float movementSpeed = 6f;
+    [Tooltip("Velocidad de rotacion del jugador")]
     public float turnSpeed = 20f;
 
     private Rigidbody rb;
-    private Animator anim;
-    private Vector3 moveInput;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
-        moveInput = Vector3.zero;
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-        Turn();
     }
 
     /// <summary>
-    /// This function will receive the vertival and horizontal inputs necessary to move the character
+    /// Moves the character in the desired direction
     /// </summary>
-    /// <param name="h">Input necessary for the movement for the horizontal axis, or 'X' axis</param>
-    /// <param name="v">Input necessary for the movement for the vertical axis, or 'Z' axis</param>
-    public void SetInput(float _horizontal, float _vertical)
+    /// <param name="dir">Movement direction</param>
+    public void Move(Vector3 dir)
     {
-        moveInput.Set(_horizontal, 0f, _vertical);
-    }
-
-    private void Move()
-    {
-        Vector3 movement = moveInput.normalized * movementSpeed * Time.deltaTime;
+        Vector3 movement = dir * movementSpeed * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
 
     }
 
-    /// <summary>
-    /// The character turns towards the movement direction (Make an override from this class if we want to change that)
-    /// </summary>
-    private void Turn()
+    public void MoveTo(Vector3 pos)
     {
-        if(moveInput != Vector3.zero)
+        Vector3 movement = Vector3.MoveTowards(transform.position, pos, movementSpeed * Time.deltaTime);
+        rb.MovePosition(movement);
+    }
+
+    /// <summary>
+    /// Turns the character towards a direction
+    /// </summary>
+    /// <param name="dir">Direction that the character will turn towards</param>
+    public void Turn(Vector3 dir)
+    {
+        if(dir != Vector3.zero)
         {
-            Quaternion turn = Quaternion.LookRotation(moveInput.normalized);
+            Quaternion turn = Quaternion.LookRotation(dir.normalized);
 
             rb.MoveRotation(Quaternion.Lerp(rb.rotation, turn, Time.deltaTime * turnSpeed));
         }
-
-        anim.SetFloat("Speed", moveInput.magnitude);
     }
 }

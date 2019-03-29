@@ -12,7 +12,7 @@ public class StateMachine : MonoBehaviour
     [HideInInspector]
     public State currentState; //Estado actual de la máquina de estados
 
-    [HideInInspector] public AIController controller; //Referencia al controlador de la IA
+    public AIController controller; //Referencia al controlador de la IA
 
     private void Start()
     {
