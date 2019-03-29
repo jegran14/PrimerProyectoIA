@@ -9,10 +9,10 @@ public class StateMachine : MonoBehaviour
     public State initialState;
     [Tooltip("Activar/Desactivar maquina de esados")]
     public bool aiActive = false;
-    [HideInInspector]
-    public State currentState; //Estado actual de la máquina de estados
+    
+    [HideInInspector]public State currentState; //Estado actual de la máquina de estados
 
-    public AIController controller; //Referencia al controlador de la IA
+    [HideInInspector]public AIController controller; //Referencia al controlador de la IA
 
     private void Start()
     {

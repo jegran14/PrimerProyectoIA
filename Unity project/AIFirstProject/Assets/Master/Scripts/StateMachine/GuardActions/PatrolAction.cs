@@ -6,8 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "StateMachine/Actions/Patrol")]
 public class PatrolAction : Action
 {
-    public float offsetDistance = 0.3f;
-
     public override void Act(AIController controller)
     {
         Patrol(controller);

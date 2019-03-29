@@ -28,7 +28,7 @@ public class LookDecision : Decision
         Collider[] targetsInViewRadius = Physics.OverlapSphere(controller.transform.position, controller.viewRadius, targetMask);
 
         //Si se ha encontrado algun target, comprobar que no haya ningun obstaculo en medio
-        for(int i = 0; i < targetsInViewRadius.Length; i++)
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - controller.transform.position).normalized; //Calcular direccion al target

@@ -29,6 +29,10 @@ public class CharacterMovement : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Move character to a desired position
+    /// </summary>
+    /// <param name="pos">Target position to move the character to</param>
     public void MoveTo(Vector3 pos)
     {
         Vector3 movement = Vector3.MoveTowards(transform.position, pos, movementSpeed * Time.deltaTime);

@@ -41,10 +41,14 @@ public class CopStateManager : AIController
             targetPos = point;
         }
 
-        if (path.Length > 0 && targetIndex < path.Length)
+        if (path != null && targetIndex < path.Length)
             Move();
     }
 
+    /// <summary>
+    /// Pedir camino al PathFinding manager
+    /// </summary>
+    /// <param name="pos">Posicion a la que se quiere llegar</param>
     private void PathRequest(Vector3 pos)
     {
         isWaitingForPath = true;
@@ -55,23 +59,22 @@ public class CopStateManager : AIController
     /// Realizarmovimiento del personaje
     /// </summary>
     private void Move()
-    {
-        //En caso de que ya estemos donde queremos pondremos la velocidad del animator a 0 para el Iddle
+    {       
         Vector3 targetPos = path[targetIndex];
         targetPos.y = this.transform.position.y;
 
-        anim.SetFloat("Speed", 0f);
 
         if (transform.position == path[targetIndex])
         {
             targetIndex++;
-            if (targetIndex >= path.Length)
+            if (targetIndex >= path.Length) //Si estamos donde queremos, no hacer nada
                 return;
         }
 
-        movementController.MoveTo(targetPos);
-        movementController.Turn((targetPos - transform.position).normalized);
-        anim.SetFloat("Speed", 1f);
+        movementController.MoveTo(targetPos); //Mover personaje a la posicion que queremos
+        movementController.Turn((targetPos - transform.position).normalized); //Girarlo en a direccion de movimiento
+
+        anim.SetFloat("Speed", (targetPos - transform.position).magnitude); //Hacer que la animación camine
     }
 
     /// <summary>
@@ -84,6 +87,11 @@ public class CopStateManager : AIController
         //Add if necessary a animation change for the animator
     }
 
+    /// <summary>
+    /// Se ha encontrado un camino al punto deseado
+    /// </summary>
+    /// <param name="newPath">Camino nuevo</param>
+    /// <param name="pathSuccesful">Si el camino es correcto o no</param>
     public void OnPathFound(Vector3[] newPath, bool pathSuccesful)
     {
         if (pathSuccesful)
@@ -94,6 +102,28 @@ public class CopStateManager : AIController
         }
     }
 
+    /// <summary>
+    /// Comprobar si la entidad se encuentra en el posion del mapa deseada
+    /// </summary>
+    /// <returns>Devuelve si se encuentra en la posicion del mapa deseada o no</returns>
+    public override bool IsAtTargetPos()
+    {
+        bool isAtTargetPos = false;
+
+        if (!isWaitingForPath && path.Length > 0)
+        {
+            Vector3 targetPos = path[path.Length - 1];
+            targetPos.y = transform.position.y;
+
+            isAtTargetPos = transform.position == targetPos;
+        }
+
+        return isAtTargetPos;
+    }
+
+    /// <summary>
+    /// Debug en el editor del camino a seguir de la entidad
+    /// </summary>
     public void OnDrawGizmos()
     {
         if (path != null)
@@ -113,20 +143,5 @@ public class CopStateManager : AIController
                 }
             }
         }
-    }
-
-    public override bool IsAtTargetPos()
-    {
-        bool isAtTargetPos = false;
-
-        if (!isWaitingForPath && path.Length > 0)
-        {
-            Vector3 targetPos = path[path.Length - 1];
-            targetPos.y = transform.position.y;
-
-            isAtTargetPos = transform.position == targetPos;
-        }
-
-        return isAtTargetPos;
     }
 }
