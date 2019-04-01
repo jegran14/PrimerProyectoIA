@@ -15,8 +15,11 @@ public class CopStateManager : AIController
 
     //Posición a la que se está moviendo el personaje
     private Vector3 targetPos;
-    //El personaje está esperando a que se le de un nuevo camino
-    private bool isWaitingForPath = false;
+    //Posicion a la que nos estamos moviendo
+    private Vector3 nextNodePos;
+    //La entidad esta esperando a que le devielvan el camino
+    private bool isWaitingForPath;
+
 
     //Controlador de movimiento del personaje
     private CharacterMovement movementController;
@@ -33,15 +36,21 @@ public class CopStateManager : AIController
     /// <param name="point">Punto al que se debe mover el personaje</param>
     public override void MoveTo(Vector3 point)
     {
-        //Comprobar si el punto de patrulla es diferente punto que se ha pasado a la funcion
-        if(targetPos != point && !isWaitingForPath)
+        if (path == null || isWaitingForPath)
+            return;
+
+        point.y = transform.position.y;
+
+        //Comprobar si el punta al que se quiere llegar es diferente al anterior
+        if (targetPos != point)
         {
             //En caso de que estemos moviendonos a un punto differente, hay que recalcular el camino
             PathRequest(point);
             targetPos = point;
         }
 
-        if (path != null && targetIndex < path.Length)
+        //Solo moverse en caso de que el index este dentro del tamaño del array
+        if(targetIndex < path.Length)
             Move();
     }
 
@@ -59,22 +68,21 @@ public class CopStateManager : AIController
     /// Realizarmovimiento del personaje
     /// </summary>
     private void Move()
-    {       
-        Vector3 targetPos = path[targetIndex];
-        targetPos.y = this.transform.position.y;
+    {
+        nextNodePos = path[targetIndex];
+        nextNodePos.y = transform.position.y;
 
-
-        if (transform.position == path[targetIndex])
+        if (transform.position == nextNodePos)
         {
             targetIndex++;
             if (targetIndex >= path.Length) //Si estamos donde queremos, no hacer nada
                 return;
         }
 
-        movementController.MoveTo(targetPos); //Mover personaje a la posicion que queremos
-        movementController.Turn((targetPos - transform.position).normalized); //Girarlo en a direccion de movimiento
+        movementController.MoveTo(nextNodePos); //Mover personaje a la posicion que queremos
+        movementController.Turn((nextNodePos - transform.position).normalized); //Girarlo en a direccion de movimiento
 
-        anim.SetFloat("Speed", (targetPos - transform.position).magnitude); //Hacer que la animación camine
+        anim.SetFloat("Speed", (nextNodePos - transform.position).magnitude); //Hacer que la animación camine
     }
 
     /// <summary>
@@ -97,9 +105,10 @@ public class CopStateManager : AIController
         if (pathSuccesful)
         {
             path = newPath;
-            targetIndex = 0;
-            isWaitingForPath = false;
+            targetIndex = 0;           
         }
+
+        isWaitingForPath = false;
     }
 
     /// <summary>
@@ -110,12 +119,12 @@ public class CopStateManager : AIController
     {
         bool isAtTargetPos = false;
 
-        if (!isWaitingForPath && path.Length > 0)
+        if (path.Length > 0 && !isWaitingForPath)
         {
-            Vector3 targetPos = path[path.Length - 1];
-            targetPos.y = transform.position.y;
+            Vector3 endPos = path[path.Length - 1];
+            endPos.y = transform.position.y;
 
-            isAtTargetPos = transform.position == targetPos;
+            isAtTargetPos = transform.position == endPos;
         }
 
         return isAtTargetPos;

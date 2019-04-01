@@ -45,7 +45,6 @@ public class LookDecision : Decision
             }
         }
         //Si no se ha encontrado ningun target, o esta obstruido por algun obstaculo, se devuelve false;
-        controller.chaseTarget = null;
         return false;
     }
 }

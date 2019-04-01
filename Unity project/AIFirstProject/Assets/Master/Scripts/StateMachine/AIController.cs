@@ -17,7 +17,7 @@ public abstract class AIController : MonoBehaviour
     public Transform[] wayPoints;
     [HideInInspector]public int currentWayPoint; //WayPoint activo
 
-    [HideInInspector] public Transform chaseTarget; //Referencia al target a perseguir
+    public Transform chaseTarget; //Referencia al target a perseguir
     [HideInInspector] public StateMachine fsm; //Maquina de estados
     protected Animator anim; //Animator
 
