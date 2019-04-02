@@ -7,12 +7,12 @@ using System;
 public class PathFinding : MonoBehaviour
 {
     // public Transform seeker, target;
-    PathRequestManager requesManager;
+    PathRequestManager requestManager;
     Grid grid;
 
     void Awake()
     {
-        requesManager = GetComponent<PathRequestManager>(); 
+        requestManager = GetComponent<PathRequestManager>(); 
         grid = GetComponent<Grid>();
     }
 
@@ -28,6 +28,7 @@ public class PathFinding : MonoBehaviour
 
         GridNode startNode = grid.NodeFromWorldPoint(startPos); //the set of nodes to be evaluated
         GridNode targetNode = grid.NodeFromWorldPoint(targetPos); //the set of nodes already evaluated
+        startNode.parent = startNode;
 
         if (startNode.walkable && targetNode.walkable)
         {
@@ -54,15 +55,20 @@ public class PathFinding : MonoBehaviour
                         continue;//skip to the next 
                     }
 
-                    int newCostToNeighbour = currentnode.gCost + GetDistance(currentnode, neighbour);
-                    if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) //if it comes up that the new calculation is lesser than the one done before, we change the value to show this (we are acceding this node from a shorter path, and this is now the currently optimal for the neighboar node -> we update it)
+                    int newMovementCostToNeighbour = currentnode.gCost + GetDistance(currentnode, neighbour);
+                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) //if it comes up that the new calculation is lesser than the one done before, we change the value to show this (we are acceding this node from a shorter path, and this is now the currently optimal for the neighboar node -> we update it)
                     {
-                        neighbour.gCost = newCostToNeighbour;
+                        neighbour.gCost = newMovementCostToNeighbour;
                         neighbour.hCost = GetDistance(neighbour, targetNode);
                         neighbour.parent = currentnode;
 
                         if (!openSet.Contains(neighbour))//now we have to recalculate this node, even if we alredy did, because the weight has chan+ged
                             openSet.Add(neighbour);
+
+                        else
+                        {
+                            openSet.UpdateItem(neighbour);
+                        }
                     }
                 }
             }
@@ -75,7 +81,7 @@ public class PathFinding : MonoBehaviour
             waypoints = RetracePath(startNode, targetNode);
         }
 
-        requesManager.FinishedProcessingPath(waypoints, pathSuccess);
+        requestManager.FinishedProcessingPath(waypoints, pathSuccess);
 
     }
 
