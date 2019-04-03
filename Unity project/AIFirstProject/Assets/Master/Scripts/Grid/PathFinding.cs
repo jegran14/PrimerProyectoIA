@@ -6,28 +6,21 @@ using System;
 
 public class PathFinding : MonoBehaviour
 {
-    // public Transform seeker, target;
-    PathRequestManager requestManager;
+
     Grid grid;
 
     void Awake()
     {
-        requestManager = GetComponent<PathRequestManager>(); 
         grid = GetComponent<Grid>();
     }
 
-    public void StartFindPath(Vector3 startPos, Vector3 targetPos)//Starts a corutine
-    {
-        StartCoroutine(FindPath(startPos, targetPos));
-    }
-
-    IEnumerator FindPath(Vector3 startPos, Vector3 targetPos)//Is now a corutine
+    public void FindPath(PathRequest request, Action<PathResult> callback)//Is now a corutine
     {
         Vector3[] waypoints = new Vector3[0];
         bool pathSuccess = false;
 
-        GridNode startNode = grid.NodeFromWorldPoint(startPos); //the set of nodes to be evaluated
-        GridNode targetNode = grid.NodeFromWorldPoint(targetPos); //the set of nodes already evaluated
+        GridNode startNode = grid.NodeFromWorldPoint(request.pathStart); //the set of nodes to be evaluated
+        GridNode targetNode = grid.NodeFromWorldPoint(request.pathEnd); //the set of nodes already evaluated
         startNode.parent = startNode;
 
         if (startNode.walkable && targetNode.walkable)
@@ -55,7 +48,7 @@ public class PathFinding : MonoBehaviour
                         continue;//skip to the next 
                     }
 
-                    int newMovementCostToNeighbour = currentnode.gCost + GetDistance(currentnode, neighbour);
+                    int newMovementCostToNeighbour = currentnode.gCost + GetDistance(currentnode, neighbour) + neighbour.movementPenalty;
                     if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) //if it comes up that the new calculation is lesser than the one done before, we change the value to show this (we are acceding this node from a shorter path, and this is now the currently optimal for the neighboar node -> we update it)
                     {
                         neighbour.gCost = newMovementCostToNeighbour;
@@ -73,15 +66,13 @@ public class PathFinding : MonoBehaviour
                 }
             }
         }
-        
-        yield return null;
 
         if (pathSuccess)
         {
             waypoints = RetracePath(startNode, targetNode);
+            pathSuccess = waypoints.Length > 0;
         }
-
-        requestManager.FinishedProcessingPath(waypoints, pathSuccess);
+        callback(new PathResult(waypoints, pathSuccess, request.callback));
 
     }
 

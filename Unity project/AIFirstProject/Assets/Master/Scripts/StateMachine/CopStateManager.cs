@@ -61,7 +61,7 @@ public class CopStateManager : AIController
     private void PathRequest(Vector3 pos)
     {
         isWaitingForPath = true;
-        PathRequestManager.RequestPath(transform.position, pos, OnPathFound);
+       // PathRequestManager.RequestPath(transform.position, pos, OnPathFound);
     }
 
     /// <summary>

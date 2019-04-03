@@ -12,7 +12,7 @@ public struct Line
     Vector2 pointOnLine_1;
     Vector2 pointOnLine_2;
 
-    //float gradientPerpendicular;
+    float gradientPerpendicular;
 
     bool approachSide;
 
@@ -22,13 +22,23 @@ public struct Line
         float dy = pointOnLine.y - pointPerpendicularToLine.y;
 
         //just calculating the perpendicular gradient
-        if (dy == 0)
+        if (dx == 0)
         {
-            gradient = verticalLineGradient;
+            gradientPerpendicular = verticalLineGradient;
         }
         else
         {
-            gradient = -dx / dy; 
+            gradientPerpendicular = dy / dx; 
+        }
+
+        if (gradientPerpendicular == 0)
+        {
+            gradient = verticalLineGradient;
+        }
+
+        else
+        {
+            gradient = -1 / gradientPerpendicular;
         }
 
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2035111234}
-  m_IndirectSpecularColor: {r: 0.31416762, g: 0.4544921, b: 0.76045823, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -649,7 +649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
-  turnSpeed: 20
+  turnSpeed: 50
 --- !u!1 &42118434
 GameObject:
   m_ObjectHideFlags: 0
@@ -1608,7 +1608,7 @@ GameObject:
   - component: {fileID: 102082500}
   - component: {fileID: 102082499}
   - component: {fileID: 102082498}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2075,12 +2075,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayGridGizmos: 1
-  player: {fileID: 42283264}
   unwalkableMask:
     serializedVersion: 2
     m_Bits: 512
   gridWorldSize: {x: 32, y: 32}
-  nodeRadius: 0.5
+  nodeRadius: 0.1
+  walkableRegions:
+  - terrainMask:
+      serializedVersion: 2
+      m_Bits: 2048
+    terrainPenalty: 0
+  obstacleProximityPenalty: 100
 --- !u!4 &485656126
 Transform:
   m_ObjectHideFlags: 0
@@ -2141,20 +2146,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &707295781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 707295779}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 3
-  turnSpeed: 20
 --- !u!114 &707295783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2170,7 +2161,7 @@ MonoBehaviour:
   target: {fileID: 42283264}
   speed: 3
   turnDst: 5
-  turnSpeed: 3
+  turnSpeed: 1
 --- !u!1 &721019227
 GameObject:
   m_ObjectHideFlags: 0
@@ -2328,7 +2319,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: aiActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9, type: 3}
+    - {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: df87c4988945cc849a59cdb77f401ca9, type: 3}
 --- !u!1 &922615835
 GameObject:
