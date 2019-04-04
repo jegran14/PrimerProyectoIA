@@ -2055,6 +2055,7 @@ GameObject:
   - component: {fileID: 485656125}
   - component: {fileID: 485656127}
   - component: {fileID: 485656128}
+  - component: {fileID: 485656129}
   m_Layer: 0
   m_Name: A*
   m_TagString: Untagged
@@ -2074,7 +2075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d3d1b09acbe5f49aa42416930a7e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayGridGizmos: 1
+  displayGridGizmos: 0
   unwalkableMask:
     serializedVersion: 2
     m_Bits: 512
@@ -2124,6 +2125,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dcb15259e2dc8644bd043c82a02e32a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &485656129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485656124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1a0cff8a72a2e4d9913875a924ff6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeScale: 1
 --- !u!1 &707295779 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3223030944943842237, guid: df87c4988945cc849a59cdb77f401ca9,
@@ -2159,7 +2173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
-  turnSpeed: 20
+  turnSpeed: 3
 --- !u!114 &707295783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,7 +2228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 721019227}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.32, y: 0, z: 9.28}
+  m_LocalPosition: {x: -0.32, y: 0, z: 11.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1562189243}

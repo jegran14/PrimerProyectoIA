@@ -8,10 +8,11 @@ public class CopStateManager : AIController
 {
     [Header("Debug Options")]
     public bool showGizmos = true;
+    [Space]
 
     //----------------------    VARIABLES PARA EL PATHFINDING   ------------------------
     [Tooltip("Distancia minima del punto para que el personaje mire al punto")]
-    public float turnDist = 3;
+    public float turnDist = 3;  
     //Distancia minima que se tiene que mover el objetivo para que se recalcule el camino
     private const float pathUpdateThreshold = 0.5f;
     //Valor al cuadrado del valor minimo del pathUpdateThreshold util para calculos matematicos
@@ -24,8 +25,6 @@ public class CopStateManager : AIController
 
     //Posición a la que se está moviendo el personaje
     private Vector3 targetPos;
-    //Posicion a la que nos estamos moviendo
-    private Vector3 nextNodePos;
     //La entidad esta esperando a que le devielvan el camino
     private bool isWaitingForPath;
 
@@ -39,7 +38,6 @@ public class CopStateManager : AIController
 
         //Inicializar primera posicion a la que moverse
         targetPos = wayPoints[currentWayPoint].position;
-        pathIndex = 0;
 
         sqrMoveThreshold = pathUpdateThreshold * pathUpdateThreshold;
 
@@ -65,7 +63,7 @@ public class CopStateManager : AIController
         anim.SetFloat("Speed", 0); //Hacer que la animación este en iddle por si acaso el personaje no se moviera
         
         //Solo moverse en caso de que el index este dentro del tamaño del array
-        if (!isWaitingForPath && pathIndex < path.finishLineIndex)
+        if (!isWaitingForPath && pathIndex <= path.finishLineIndex)
             Move();
     }
 
@@ -93,12 +91,16 @@ public class CopStateManager : AIController
 
         while (path.turnBoundaries[pathIndex].HasCrossedLine(pos2D))
         {
-            if (pathIndex == path.finishLineIndex)
+            if (pathIndex > path.finishLineIndex)
             {
-                break;
+                return;
             }
             else
+            {
                 pathIndex++;
+                if (pathIndex > path.finishLineIndex)
+                    return;
+            }
         }
 
         
@@ -145,7 +147,7 @@ public class CopStateManager : AIController
 
         if (path != null && !isWaitingForPath)
         {
-            isAtTargetPos = path.turnBoundaries[path.turnBoundaries.Length - 1].HasCrossedLine(pos2D);
+            isAtTargetPos = pathIndex > path.finishLineIndex;
         }
 
         return isAtTargetPos;
