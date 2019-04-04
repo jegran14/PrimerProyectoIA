@@ -14,14 +14,19 @@ public class NPCEditor : Editor
         {
             AIController fow = fsm.controller;
 
+            //Distancia máxima de visión
             Handles.color = fsm.currentState.sceneGizmoColor;
-            Handles.DrawWireArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.viewRadius);
+            Handles.DrawWireArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.viewMaxRadius);
             Vector3 viewAngleA = fow.DirFromAngle(-fow.viewAngle / 2, false);
             Vector3 viewAngleB = fow.DirFromAngle(fow.viewAngle / 2, false);
 
-            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.viewRadius);
-            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
-            Handles.DrawSolidArc(fow.transform.position, Vector3.up, viewAngleA, fow.viewAngle, fow.viewRadius);
+            //Cono de visión
+            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.viewMaxRadius);
+            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewMaxRadius);
+            Handles.DrawSolidArc(fow.transform.position, Vector3.up, viewAngleA, fow.viewAngle, fow.viewMaxRadius);
+
+            //Distancia mínima de visión
+            Handles.DrawSolidArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.viewMinRadius);
 
             if(fow.chaseTarget != null)
             {

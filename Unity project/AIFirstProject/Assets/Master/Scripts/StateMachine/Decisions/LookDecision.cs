@@ -25,7 +25,7 @@ public class LookDecision : Decision
     private bool Look (AIController controller)
     {
         //Buscar si el target se encuentra dentro del area de vision
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(controller.transform.position, controller.viewRadius, targetMask);
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(controller.transform.position, controller.viewMaxRadius, targetMask);
 
         //Si se ha encontrado algun target, comprobar que no haya ningun obstaculo en medio
         for (int i = 0; i < targetsInViewRadius.Length; i++)
