@@ -10,10 +10,16 @@ public class CopStateManager : AIController
     public bool showGizmos = true;
 
     //----------------------    VARIABLES PARA EL PATHFINDING   ------------------------
-    //Camino de waypoints que ha de seguir el guardia
-    private Vector3[] path;
-    //Indice del del siguiente punto que se ha de mover el guardia en su camino
-    private int targetIndex;
+    [Tooltip("Distancia minima del punto para que el personaje mire al punto")]
+    public float turnDist = 3;
+    //Distancia minima que se tiene que mover el objetivo para que se recalcule el camino
+    private const float pathUpdateThreshold = 0.5f;
+    //Valor al cuadrado del valor minimo del pathUpdateThreshold util para calculos matematicos
+    private float sqrMoveThreshold;
+    //Camino de nodos a seguir
+    private Path path;
+    //Indice del punto del camino al que nos estamos moviendo
+    private int pathIndex;
     //-----------------------------------------------------------------------------------
 
     //Posición a la que se está moviendo el personaje
@@ -30,62 +36,76 @@ public class CopStateManager : AIController
     private void Start()
     {
         movementController = GetComponent<CharacterMovement>();
-        PathRequest(wayPoints[currentWayPoint].position);
+
+        //Inicializar primera posicion a la que moverse
+        targetPos = wayPoints[currentWayPoint].position;
+        pathIndex = 0;
+
+        sqrMoveThreshold = pathUpdateThreshold * pathUpdateThreshold;
+
+        PathRequest(targetPos);
     }
 
     /// <summary>
     /// Mover el personaje a un punto concreto
     /// </summary>
     /// <param name="point">Punto al que se debe mover el personaje</param>
-    public override void MoveTo(Vector3 point)
+    public override void MoveTo(Vector3 position)
     {
-        if (path == null || isWaitingForPath)
+        if (isWaitingForPath || path == null)
             return;
 
-        point.y = transform.position.y;
-
         //Comprobar si el punta al que se quiere llegar es diferente al anterior
-        if (targetPos != point)
+        if ((position - targetPos).sqrMagnitude > sqrMoveThreshold)
         {
             //En caso de que estemos moviendonos a un punto differente, hay que recalcular el camino
-            PathRequest(point);
-            targetPos = point;
+            PathRequest(position);
         }
 
+        anim.SetFloat("Speed", 0); //Hacer que la animación este en iddle por si acaso el personaje no se moviera
+        
         //Solo moverse en caso de que el index este dentro del tamaño del array
-        if(targetIndex < path.Length)
+        if (!isWaitingForPath && pathIndex < path.finishLineIndex)
             Move();
     }
 
     /// <summary>
     /// Pedir camino al PathFinding manager
     /// </summary>
-    /// <param name="pos">Posicion a la que se quiere llegar</param>
-    private void PathRequest(Vector3 pos)
+    /// <param name="target">Posicion a la que se quiere llegar</param>
+    private void PathRequest(Vector3 target)
     {
         isWaitingForPath = true;
-       // PathRequestManager.RequestPath(transform.position, pos, OnPathFound);
+
+        /*if (Time.timeSinceLevelLoad < 0.3f)
+            return;*/
+
+       PathRequestManager.RequestPath(new PathRequest(transform.position, target, OnPathFound));
+       targetPos = target;
     }
 
     /// <summary>
     /// Realizarmovimiento del personaje
     /// </summary>
     private void Move()
-    {
-        nextNodePos = path[targetIndex];
-        nextNodePos.y = transform.position.y;
+    {  
+        Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
 
-        if (transform.position == nextNodePos)
+        while (path.turnBoundaries[pathIndex].HasCrossedLine(pos2D))
         {
-            targetIndex++;
-            if (targetIndex >= path.Length) //Si estamos donde queremos, no hacer nada
-                return;
+            if (pathIndex == path.finishLineIndex)
+            {
+                break;
+            }
+            else
+                pathIndex++;
         }
 
-        movementController.MoveTo(nextNodePos); //Mover personaje a la posicion que queremos
-        movementController.Turn((nextNodePos - transform.position).normalized); //Girarlo en a direccion de movimiento
+        
+        movementController.Turn(path.lookPoints[pathIndex] - transform.position); //Girarlo en a direccion de movimiento
+        movementController.Move(transform.forward); //Mover personaje a la posicion que queremos
 
-        anim.SetFloat("Speed", (nextNodePos - transform.position).magnitude); //Hacer que la animación camine
+        anim.SetFloat("Speed", 1); //Hacer que la animación camine
     }
 
     /// <summary>
@@ -107,8 +127,8 @@ public class CopStateManager : AIController
     {
         if (pathSuccesful)
         {
-            path = newPath;
-            targetIndex = 0;           
+            path = new Path(newPath, transform.position, turnDist);
+            pathIndex = 0;
         }
 
         isWaitingForPath = false;
@@ -121,13 +141,11 @@ public class CopStateManager : AIController
     public override bool IsAtTargetPos()
     {
         bool isAtTargetPos = false;
+        Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
 
-        if (path.Length > 0 && !isWaitingForPath)
+        if (path != null && !isWaitingForPath)
         {
-            Vector3 endPos = path[path.Length - 1];
-            endPos.y = transform.position.y;
-
-            isAtTargetPos = transform.position == endPos;
+            isAtTargetPos = path.turnBoundaries[path.turnBoundaries.Length - 1].HasCrossedLine(pos2D);
         }
 
         return isAtTargetPos;
@@ -142,20 +160,7 @@ public class CopStateManager : AIController
         {
             if (path != null)
             {
-                for (int i = targetIndex; i < path.Length; i++)
-                {
-                    Gizmos.color = Color.black;
-                    Gizmos.DrawCube(path[i], Vector3.one);
-
-                    if (i == targetIndex)
-                    {
-                        Gizmos.DrawLine(transform.position, path[i]);
-                    }
-                    else
-                    {
-                        Gizmos.DrawLine(path[i - 1], path[i]);
-                    }
-                }
+                path.DrawWithGizmos();
             }
 
             if (patrolMiddlePoint != null)
