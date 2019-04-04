@@ -6,6 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterMovement))]
 public class CopStateManager : AIController
 {
+    [Header("Debug Options")]
+    public bool showGizmos = true;
+
     //----------------------    VARIABLES PARA EL PATHFINDING   ------------------------
     //Camino de waypoints que ha de seguir el guardia
     private Vector3[] path;
@@ -135,21 +138,30 @@ public class CopStateManager : AIController
     /// </summary>
     public void OnDrawGizmos()
     {
-        if (path != null)
+        if (showGizmos)
         {
-            for (int i = targetIndex; i < path.Length; i++)
+            if (path != null)
             {
-                Gizmos.color = Color.black;
-                Gizmos.DrawCube(path[i], Vector3.one);
+                for (int i = targetIndex; i < path.Length; i++)
+                {
+                    Gizmos.color = Color.black;
+                    Gizmos.DrawCube(path[i], Vector3.one);
 
-                if (i == targetIndex)
-                {
-                    Gizmos.DrawLine(transform.position, path[i]);
+                    if (i == targetIndex)
+                    {
+                        Gizmos.DrawLine(transform.position, path[i]);
+                    }
+                    else
+                    {
+                        Gizmos.DrawLine(path[i - 1], path[i]);
+                    }
                 }
-                else
-                {
-                    Gizmos.DrawLine(path[i - 1], path[i]);
-                }
+            }
+
+            if (patrolMiddlePoint != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(patrolMiddlePoint, chaseMaxDistace);
             }
         }
     }
