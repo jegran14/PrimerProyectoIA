@@ -17,18 +17,22 @@ public class PatrolAction : Action
     /// <param name="controller">Referencia al controlador de la IA</param>
     private void Patrol(AIController controller)
     {
-        Vector3 currentWaypoint = controller.GetWayPoint(controller.currentWayPoint).position;
-        currentWaypoint.y = controller.transform.position.y;
-
-        if (controller.IsAtTargetPos())
+        if(controller.wayPoints == null || controller.currentWaypointIndex < controller.wayPoints.Length)
         {
-            controller.currentWayPoint++;
-            if (controller.currentWayPoint >= controller.wayPoints.Length)
-                controller.currentWayPoint = 0;
+            Vector3 currentWaypoint = controller.wayPoints[controller.currentWaypointIndex].position;
 
-            currentWaypoint = controller.GetWayPoint(controller.currentWayPoint).position;
+            if (controller.IsAtTargetPos())
+            {
+                controller.currentWaypointIndex++;
+                if (controller.currentWaypointIndex >= controller.wayPoints.Length)
+                    controller.currentWaypointIndex = 0;
+
+                currentWaypoint = controller.wayPoints[controller.currentWaypointIndex].position;
+            }
+
+            currentWaypoint.y = controller.transform.position.y;
+
+            controller.MoveTo(currentWaypoint);
         }
-
-        controller.MoveTo(currentWaypoint);
     }
 }

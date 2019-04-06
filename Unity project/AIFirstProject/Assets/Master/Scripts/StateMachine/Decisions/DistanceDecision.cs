@@ -6,7 +6,7 @@ using UnityEngine;
 public class DistanceDecision : Decision
 {
     [Tooltip("Tipo de comparacion que se debe hacer con la distancia")]
-    public Comparison theDistanceIs;
+    public ComparisonSigns theDistanceIs;
 
     public override bool Decide(AIController controller)
     {
@@ -22,29 +22,24 @@ public class DistanceDecision : Decision
     private bool CalculateDistance(AIController controller)
     {
         Vector3 characterPos = controller.transform.position;
-        float distance = Vector3.Distance(characterPos, controller.PatrolMiddlePoint);
+        float distance = Vector3.Distance(characterPos, controller.patrolMiddlePoint);
 
         bool isInDistance = false;
 
         switch(theDistanceIs)
         {
-            case Comparison.Greater:
-                isInDistance = distance > controller.chaseMaxDistace;
+            case ComparisonSigns.Greater:
+                isInDistance = distance > controller.chasingMaxDistance;
                 break;
-            case Comparison.Equal:
-                isInDistance = distance == controller.chaseMaxDistace;
+            case ComparisonSigns.Equal:
+                isInDistance = distance == controller.chasingMaxDistance;
                 break;
-            case Comparison.Lower:
-                isInDistance = distance < controller.chaseMaxDistace;
+            case ComparisonSigns.Lower:
+                isInDistance = distance < controller.chasingMaxDistance;
                 break;
         }
 
 
         return isInDistance;
-    }
-
-    public enum Comparison
-    {
-        Greater, Equal, Lower
     }
 }

@@ -16,22 +16,22 @@ public class NPCEditor : Editor
 
             //Distancia máxima de visión
             Handles.color = fsm.currentState.sceneGizmoColor;
-            Handles.DrawWireArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.viewMaxRadius);
-            Vector3 viewAngleA = fow.DirFromAngle(-fow.viewAngle / 2, false);
-            Vector3 viewAngleB = fow.DirFromAngle(fow.viewAngle / 2, false);
+            Handles.DrawWireArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.coneViewRadius);
+            Vector3 viewAngleA = fow.DirFromAngle(-fow.coneViewAngle / 2, false);
+            Vector3 viewAngleB = fow.DirFromAngle(fow.coneViewAngle / 2, false);
 
             //Cono de visión
-            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.viewMaxRadius);
-            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewMaxRadius);
-            Handles.DrawSolidArc(fow.transform.position, Vector3.up, viewAngleA, fow.viewAngle, fow.viewMaxRadius);
+            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.coneViewRadius);
+            Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.coneViewRadius);
+            Handles.DrawSolidArc(fow.transform.position, Vector3.up, viewAngleA, fow.coneViewAngle, fow.coneViewRadius);
 
             //Distancia mínima de visión
-            Handles.DrawSolidArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.viewMinRadius);
+            Handles.DrawSolidArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.coneViewRadius);
 
-            if(fow.chaseTarget != null)
+            if(fow.chasingTarget != null)
             {
                 Handles.color = Color.red;
-                Handles.DrawLine(fow.transform.position, fow.chaseTarget.position);
+                Handles.DrawLine(fow.transform.position, fow.chasingTarget.position);
             }
         }
     }

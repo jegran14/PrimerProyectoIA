@@ -12,10 +12,10 @@ public class ChaseAction : Action
 
    private void ChaseTarget(AIController controller)
     {
-        if (controller.chaseTarget == null)
+        if (controller.chasingTarget == null)
             return;
 
-        Vector3 targetPos = controller.chaseTarget.position;
+        Vector3 targetPos = controller.chasingTarget.position;
         targetPos.y = controller.transform.position.y;
 
         controller.MoveTo(targetPos);
