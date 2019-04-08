@@ -18,6 +18,6 @@ public class ChaseAction : Action
         Vector3 targetPos = controller.chasingTarget.position;
         targetPos.y = controller.transform.position.y;
 
-        controller.MoveTo(targetPos);
+        controller.MoveTo(targetPos, MovementTypes.Run);
     }
 }

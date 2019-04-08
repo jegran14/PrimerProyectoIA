@@ -32,7 +32,7 @@ public class PatrolAction : Action
 
             currentWaypoint.y = controller.transform.position.y;
 
-            controller.MoveTo(currentWaypoint);
+            controller.MoveTo(currentWaypoint, MovementTypes.Walk);
         }
     }
 }

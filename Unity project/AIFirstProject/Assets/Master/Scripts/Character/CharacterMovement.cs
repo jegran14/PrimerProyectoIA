@@ -5,11 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterMovement : MonoBehaviour
 {
-    [Tooltip("Velocidad de movimiento del jugador")]
-    public float movementSpeed = 6f;
-    [Tooltip("Velocidad de rotacion del jugador")]
-    public float turnSpeed = 20f;
-
     private Rigidbody rb;
 
     // Start is called before the first frame update
@@ -22,7 +17,8 @@ public class CharacterMovement : MonoBehaviour
     /// Moves the character in the desired direction
     /// </summary>
     /// <param name="dir">Movement direction</param>
-    public void Move(Vector3 dir)
+    /// <param name="movementSpeed">Movement Speed</param>
+    public void Move(Vector3 dir, float movementSpeed)
     {
         Vector3 movement = dir * movementSpeed * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
@@ -33,7 +29,8 @@ public class CharacterMovement : MonoBehaviour
     /// Move character to a desired position
     /// </summary>
     /// <param name="pos">Target position to move the character to</param>
-    public void MoveTo(Vector3 pos)
+    /// <param name="movementSpeed">Movement speed</param>
+    public void MoveTo(Vector3 pos, float movementSpeed)
     {
         Vector3 movement = Vector3.MoveTowards(transform.position, pos, movementSpeed * Time.deltaTime);
         rb.MovePosition(movement);
@@ -43,7 +40,8 @@ public class CharacterMovement : MonoBehaviour
     /// Turns the character towards a direction
     /// </summary>
     /// <param name="dir">Direction that the character will turn towards</param>
-    public void Turn(Vector3 dir)
+    /// <param name="turnSpeend">Turning speed</param>
+    public void Turn(Vector3 dir, float turnSpeed)
     {
         if(dir != Vector3.zero)
         {

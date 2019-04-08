@@ -2,70 +2,130 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Controlador IA del guardia
+//Clase encargada de los steering behaviors
 [RequireComponent(typeof(CharacterMovement))]
 public class AIMovementController : MonoBehaviour
 {
-    /*[Header("Debug Options")]
-    public bool showGizmos = true;
-    [Space]
+    public bool showGizmos = false;
+    public bool isWalking = false;
 
+    #region moveProperties
+    //------------------------- PROPIEDADES DE MOVIMIENTO -------------------------------
+    [Header("Propiedas de movimiento")]
+    [Tooltip("Velocidad de movimiento del personaje caminando")]
+    [SerializeField] private float _walkingSpeed = 3f;
+    [Tooltip("Velocidad de movimiento delpersonaje corriendo")]
+    [SerializeField] private float _runningSpeed = 8f;
+    [Tooltip("Velocidad a la que se gira el personaje")]
+    [SerializeField] private float _turningSpeed = 5f;
+    //-----------------------------------------------------------------------------------
+    #endregion
+    #region steeringBehaviorsProperties
+    //----------------------- PROPIEDADES PARA LAS STEERING BEHAVIORS -------------------
+    [Header("Propiedades steering behaviors")]
+    [Tooltip("Máscara de los obstaculos para el personaje")]
+    [SerializeField] private LayerMask _obstacleMask;
+    [Tooltip("Radio de colisión del personaje")]
+    [SerializeField] private float _characterRadius = 0.3f;
+    [Tooltip("Angulo del cono para comprobar las colisiones")]
+    [SerializeField] private float _collisionConeAngle = 60f;
+    //-----------------------------------------------------------------------------------
+    #endregion
+
+    #region pathFindingProperties
     //----------------------    VARIABLES PARA EL PATHFINDING   ------------------------
     [Tooltip("Distancia minima del punto para que el personaje mire al punto")]
-    public float turnDist = 3;  
+    [SerializeField] float _turnDist = 3;
     //Distancia minima que se tiene que mover el objetivo para que se recalcule el camino
-    private const float pathUpdateThreshold = 0.5f;
+    private const float _pathUpdateThreshold = 0.5f;
     //Valor al cuadrado del valor minimo del pathUpdateThreshold util para calculos matematicos
-    private float sqrMoveThreshold;
+    private float _sqrMoveThreshold;
     //Camino de nodos a seguir
-    private Path path;
+    private Path _path;
     //Indice del punto del camino al que nos estamos moviendo
-    private int pathIndex;
+    private int _pathIndex;
     //-----------------------------------------------------------------------------------
 
+
     //Posición a la que se está moviendo el personaje
-    private Vector3 targetPos;
+    private Vector3 _targetPos;
     //La entidad esta esperando a que le devielvan el camino
-    private bool isWaitingForPath;
+    private bool _isWaitingForPath;
+    #endregion
 
+    private CharacterMovement charMovement;
 
-    //Controlador de movimiento del personaje
-    private CharacterMovement movementController;
-
+    //----------------------------- GETTERS Y SETTERS -----------------------------------
+    public float collisionConeAngle { get { return _collisionConeAngle; } }
+    //-----------------------------------------------------------------------------------
 
     private void Start()
     {
-       /* movementController = GetComponent<CharacterMovement>();
+        charMovement = GetComponent<CharacterMovement>();
 
-        //Inicializar primera posicion a la que moverse
-        targetPos = wayPoints[currentWayPoint].position;
+        _sqrMoveThreshold = _pathUpdateThreshold * _pathUpdateThreshold;
+    }
 
-        sqrMoveThreshold = pathUpdateThreshold * pathUpdateThreshold;
+    #region pathFindingFunctions
+    public void SetTarget(Vector3 target)
+    {
+        //Comprobar si el punta al que se quiere llegar es diferente al anterior
+        if (_targetPos == null || (target - _targetPos).sqrMagnitude > _sqrMoveThreshold)
+        {
+            //En caso de que estemos moviendonos a un punto differente, hay que recalcular el camino
+            PathRequest(target);
+        }
+    }
 
-        PathRequest(targetPos);
+    public void MoveTorwards(Vector3 position, MovementTypes type)
+    {
+        SetTarget(position);
+ 
+
+        if (_path != null && (_pathIndex < _path.finishLineIndex || !_isWaitingForPath))
+        {
+            float speed = (type == MovementTypes.Walk) ? _walkingSpeed : _runningSpeed;
+            Move(speed);
+        }
     }
 
     /// <summary>
-    /// Mover el personaje a un punto concreto
+    /// Realizarmovimiento del personaje
     /// </summary>
-    /// <param name="point">Punto al que se debe mover el personaje</param>
-    public void MoveTo(Vector3 position)
+    private void Move(float moveSpeed)
     {
-        if (isWaitingForPath || path == null)
-            return;
+        Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
 
-        //Comprobar si el punta al que se quiere llegar es diferente al anterior
-        if ((position - targetPos).sqrMagnitude > sqrMoveThreshold)
+        while (_path.turnBoundaries[_pathIndex].HasCrossedLine(pos2D))
         {
-            //En caso de que estemos moviendonos a un punto differente, hay que recalcular el camino
-            PathRequest(position);
+            if (_pathIndex > _path.finishLineIndex)
+            {
+                return;
+            }
+            else
+            {
+                _pathIndex++;
+                if (_pathIndex > _path.finishLineIndex)
+                {
+                    isWalking = false;
+                    return;
+                }
+            }
         }
 
-        anim.SetFloat("Speed", 0); //Hacer que la animación este en iddle por si acaso el personaje no se moviera
-        
-        //Solo moverse en caso de que el index este dentro del tamaño del array
-        if (!isWaitingForPath && pathIndex <= path.finishLineIndex)
-            Move();
+        //Direccion en la que seencuentra el siguiente punto a moverse
+        Vector3 pathDir = _path.lookPoints[_pathIndex] - transform.position;
+        //Direccion en la que va a tener que rotar  el personaje
+        Vector3 direction;
+        //Comprobar si el personaje va a collisionar
+        bool isColliding = TestObstacles(pathDir, out direction);
+
+        charMovement.Turn(direction, _turningSpeed); //Girarlo en a direccion de movimiento
+
+        if(!testDirection(direction))
+            charMovement.Move(transform.forward, moveSpeed); //Mover personaje a la posicion que queremos
+
+        isWalking = true;
     }
 
     /// <summary>
@@ -74,39 +134,13 @@ public class AIMovementController : MonoBehaviour
     /// <param name="target">Posicion a la que se quiere llegar</param>
     private void PathRequest(Vector3 target)
     {
-        isWaitingForPath = true;
+        _isWaitingForPath = true;
 
         /*if (Time.timeSinceLevelLoad < 0.3f)
-            return;
+            return;*/
 
-       PathRequestManager.RequestPath(new PathRequest(transform.position, target, OnPathFound));
-       targetPos = target;
-    }
-
-    /// <summary>
-    /// Realizarmovimiento del personaje
-    /// </summary>
-    private void Move()
-    {  
-        Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
-
-        while (path.turnBoundaries[pathIndex].HasCrossedLine(pos2D))
-        {
-            if (pathIndex > path.finishLineIndex)
-            {
-                return;
-            }
-            else
-            {
-                pathIndex++;
-                if (pathIndex > path.finishLineIndex)
-                    return;
-            }
-        }
-
-        
-        movementController.Turn(path.lookPoints[pathIndex] - transform.position); //Girarlo en a direccion de movimiento
-        movementController.Move(transform.forward); //Mover personaje a la posicion que queremos
+        PathRequestManager.RequestPath(new PathRequest(transform.position, target, OnPathFound));
+        _targetPos = target;
     }
 
     /// <summary>
@@ -118,41 +152,84 @@ public class AIMovementController : MonoBehaviour
     {
         if (pathSuccesful)
         {
-            path = new Path(newPath, transform.position, turnDist);
-            pathIndex = 0;
+            _path = new Path(newPath, transform.position, _turnDist);
+            _pathIndex = 0;
         }
 
-        isWaitingForPath = false;
+        _isWaitingForPath = false;
     }
 
     /// <summary>
-    /// Comprobar si la entidad se encuentra en el posion del mapa deseada
+    /// Comprobar si el personaje se encuentra al final del path
     /// </summary>
-    /// <returns>Devuelve si se encuentra en la posicion del mapa deseada o no</returns>
-   /*public override bool IsAtTargetPos()
+    /// <returns></returns>
+    public bool IsAtEndPosition()
     {
         bool isAtTargetPos = false;
         Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
 
-        if (path != null && !isWaitingForPath)
+        if (_path != null && !_isWaitingForPath)
         {
-            isAtTargetPos = pathIndex > path.finishLineIndex;
+            isAtTargetPos = _pathIndex > _path.finishLineIndex;
         }
 
         return isAtTargetPos;
     }
+    #endregion
+
+    #region steeringBehaviorFunctions
+    /// <summary>
+    /// Comprobar si la dirección de movimiento esta dentro del rango permitido
+    /// </summary>
+    /// <param name="dir">Direccion de movimiento</param>
+    /// <returns>Devuelve si se ha producido una colisión o no</returns>
+    private bool testDirection(Vector3 dir)
+    {
+        float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
+
+        if (Mathf.Abs(angle) > 90f)
+            return true;
+
+        return false;
+    }
 
     /// <summary>
-    /// Debug en el editor del camino a seguir de la entidad
+    /// Comprobar si hay algun obstaculo en el camino
     /// </summary>
+    /// <param name="dir">Direccion en  la que se encuentra el proximo punto de ruta</param>
+    /// <param name="turnDir">Referencia al vector direccion para la rotacion</param>
+    /// <returns></returns>
+    private bool TestObstacles(Vector3 dir, out Vector3 turnDir)
+    {
+        //Calcular direcciones de los rayos
+        Vector3 rightRayDir = Quaternion.AngleAxis(_collisionConeAngle, Vector3.up) * transform.forward;
+        Vector3 leftRayDir = Quaternion.AngleAxis(-_collisionConeAngle, Vector3.up) * transform.forward;
+        //Relizar raycasts para comprobar si hay collision
+        bool rightRayColision = Physics.Raycast(transform.position, rightRayDir, 1.3f, _obstacleMask);
+        bool leftRayColision = Physics.Raycast(transform.position, leftRayDir, 1.3f, _obstacleMask);
+
+        //Si no hay colision devolver direccion original
+        if(!rightRayColision && !leftRayColision) 
+        {
+            turnDir = dir.normalized;
+            return false;
+        }
+
+        //Si nb hay colision a la derecha pero si a la izquierda, asignar direccion de rotacion de la derecha
+        if (!rightRayColision && leftRayColision)
+            turnDir = rightRayDir;
+        else  //En elcaso contrario devolver direccion de rotacion izquierda
+            turnDir = leftRayDir;
+
+        return true;
+    }
+    #endregion
+
     public void OnDrawGizmos()
     {
-        if (showGizmos)
+        if(showGizmos)
         {
-            if (path != null)
-            {
-                path.DrawWithGizmos();
-            }
+            _path.DrawWithGizmos();
         }
-    }*/
+    }
 }

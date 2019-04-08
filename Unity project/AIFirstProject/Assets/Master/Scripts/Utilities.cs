@@ -6,3 +6,8 @@ public enum ComparisonSigns
 {
     Greater, GreaterOrEqual, Equal, LowerOrEqual, Lower
 }
+
+public enum MovementTypes
+{
+    Run, Walk
+}

@@ -648,8 +648,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!1 &42118434
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,6 +754,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcbab5fc42a813b46918cf5fa5f4f14a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 6
+  turnSpeed: 20
 --- !u!1 &42118496
 GameObject:
   m_ObjectHideFlags: 0
@@ -2172,8 +2172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 3
 --- !u!114 &707295783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2190,6 +2188,12 @@ MonoBehaviour:
   speed: 3
   turnDst: 5
   turnSpeed: 3
+--- !u!4 &707295786 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8887146976495407064, guid: df87c4988945cc849a59cdb77f401ca9,
+    type: 3}
+  m_PrefabInstance: {fileID: 726258815}
+  m_PrefabAsset: {fileID: 0}
 --- !u!136 &707295787
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2204,6 +2208,29 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &707295788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707295779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0955fd48311d064580237d22f832cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showGizmos: 0
+  isWalking: 1
+  _walkingSpeed: 3
+  _runningSpeed: 8
+  _turningSpeed: 5
+  _obstacleMask:
+    serializedVersion: 2
+    m_Bits: 512
+  _characterRadius: 0.3
+  _collisionConeAngle: 30
+  _turnDist: 3
 --- !u!1 &721019227
 GameObject:
   m_ObjectHideFlags: 0
@@ -3484,7 +3511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e811cb88c6b982049b1fd8861b0233b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 42283264}
+  target: {fileID: 707295786}
   smoothing: 0.1
 --- !u!1 &1411467043
 GameObject:

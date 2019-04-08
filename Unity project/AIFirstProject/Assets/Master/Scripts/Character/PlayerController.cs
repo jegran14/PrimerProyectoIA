@@ -5,6 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterMovement))]
 public class PlayerController : MonoBehaviour
 {
+    [Tooltip("Velocidad de movimiento del jugador")]
+    public float movementSpeed = 6f;
+    [Tooltip("Velocidad de rotacion del jugador")]
+    public float turnSpeed = 20f;
+
     //Componentes necesarios para el jugador
     private CharacterMovement movementController;
     private Animator anim;
@@ -31,12 +36,12 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        movementController.Move(moveInput.normalized);
+        movementController.Move(moveInput.normalized, movementSpeed);
         anim.SetFloat("Speed", moveInput.magnitude);
     }
 
     private void Turn()
     {
-        movementController.Turn(moveInput.normalized);
+        movementController.Turn(moveInput.normalized, turnSpeed);
     }
 }
