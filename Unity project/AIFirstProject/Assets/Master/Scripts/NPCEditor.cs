@@ -26,7 +26,7 @@ public class NPCEditor : Editor
             Handles.DrawSolidArc(fow.transform.position, Vector3.up, viewAngleA, fow.coneViewAngle, fow.coneViewRadius);
 
             //Distancia mínima de visión
-            Handles.DrawSolidArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.coneViewRadius);
+            Handles.DrawSolidArc(fow.transform.position, Vector3.up, Vector3.forward, 360, fow.closeAreaRadius);
 
             if(fow.chasingTarget != null)
             {

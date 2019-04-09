@@ -50,7 +50,7 @@ public class CopStateManager : AIController
 
     public override float coneViewAngle => _coneViewAngle;
 
-    public override float closeAreaRadius => _coneViewRadius;
+    public override float closeAreaRadius => _closeAreaRadius;
 
     public override Transform[] wayPoints => _wayPoints;
 

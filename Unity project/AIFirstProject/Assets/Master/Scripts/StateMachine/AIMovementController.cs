@@ -27,13 +27,16 @@ public class AIMovementController : MonoBehaviour
     [SerializeField] private LayerMask _obstacleMask;
     [Tooltip("Radio de colisión del personaje")]
     [SerializeField] private float _characterRadius = 0.3f;
+    //Radio del personaje en cordenadas globales
+    private float _globalCharacterRadius;
     [Tooltip("Angulo del cono para comprobar las colisiones")]
-    [SerializeField] private float _collisionConeAngle = 60f;
+    [SerializeField] private float _collisionDistance = 1f;
     //-----------------------------------------------------------------------------------
     #endregion
 
     #region pathFindingProperties
     //----------------------    VARIABLES PARA EL PATHFINDING   ------------------------
+    [Header("Propiedades PathFinding")]
     [Tooltip("Distancia minima del punto para que el personaje mire al punto")]
     [SerializeField] float _turnDist = 3;
     //Distancia minima que se tiene que mover el objetivo para que se recalcule el camino
@@ -53,17 +56,18 @@ public class AIMovementController : MonoBehaviour
     private bool _isWaitingForPath;
     #endregion
 
-    private CharacterMovement charMovement;
+    private AIController _controller;
 
-    //----------------------------- GETTERS Y SETTERS -----------------------------------
-    public float collisionConeAngle { get { return _collisionConeAngle; } }
-    //-----------------------------------------------------------------------------------
+    private CharacterMovement charMovement;
 
     private void Start()
     {
         charMovement = GetComponent<CharacterMovement>();
+        _controller = GetComponent<AIController>();
 
         _sqrMoveThreshold = _pathUpdateThreshold * _pathUpdateThreshold;
+        //La moltiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
+        _globalCharacterRadius = _characterRadius * 2 * transform.localScale.x;
     }
 
     #region pathFindingFunctions
@@ -121,7 +125,7 @@ public class AIMovementController : MonoBehaviour
         bool isColliding = TestObstacles(pathDir, out direction);
 
         charMovement.Turn(direction, _turningSpeed); //Girarlo en a direccion de movimiento
-
+        //Si la direccion de movimiento es contraia, no nos movemos, solo nos giramos hasta que estemos mirando en la direccion correcta
         if(!testDirection(direction))
             charMovement.Move(transform.forward, moveSpeed); //Mover personaje a la posicion que queremos
 
@@ -186,7 +190,7 @@ public class AIMovementController : MonoBehaviour
     private bool testDirection(Vector3 dir)
     {
         float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
-
+        //Comprobar si la dirección de movimiento es contraria a la que está mirando el personaje
         if (Mathf.Abs(angle) > 90f)
             return true;
 
@@ -201,12 +205,14 @@ public class AIMovementController : MonoBehaviour
     /// <returns></returns>
     private bool TestObstacles(Vector3 dir, out Vector3 turnDir)
     {
+        float angle = Mathf.Asin(_globalCharacterRadius/_collisionDistance) * Mathf.Rad2Deg;
+
         //Calcular direcciones de los rayos
-        Vector3 rightRayDir = Quaternion.AngleAxis(_collisionConeAngle, Vector3.up) * transform.forward;
-        Vector3 leftRayDir = Quaternion.AngleAxis(-_collisionConeAngle, Vector3.up) * transform.forward;
+        Vector3 rightRayDir = _controller.DirFromAngle(angle, false);
+        Vector3 leftRayDir = _controller.DirFromAngle(-angle, false);
         //Relizar raycasts para comprobar si hay collision
-        bool rightRayColision = Physics.Raycast(transform.position, rightRayDir, 1.3f, _obstacleMask);
-        bool leftRayColision = Physics.Raycast(transform.position, leftRayDir, 1.3f, _obstacleMask);
+        bool rightRayColision = Physics.Raycast(transform.position, rightRayDir, _collisionDistance, _obstacleMask);
+        bool leftRayColision = Physics.Raycast(transform.position, leftRayDir, _collisionDistance, _obstacleMask);
 
         //Si no hay colision devolver direccion original
         if(!rightRayColision && !leftRayColision) 
@@ -230,6 +236,16 @@ public class AIMovementController : MonoBehaviour
         if(showGizmos)
         {
             _path.DrawWithGizmos();
+
+            float angle = Mathf.Atan(_globalCharacterRadius / _collisionDistance) * Mathf.Rad2Deg;
+
+            //Calcular direcciones de los rayos
+            Vector3 rightRayDir = _controller.DirFromAngle(angle, false);
+            Vector3 leftRayDir = _controller.DirFromAngle(-angle, false);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + rightRayDir * _collisionDistance);
+            Gizmos.DrawLine(transform.position, transform.position + leftRayDir * _collisionDistance);
         }
     }
 }
