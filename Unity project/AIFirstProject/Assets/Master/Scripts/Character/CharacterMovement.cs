@@ -11,11 +11,14 @@ public class CharacterMovement : MonoBehaviour
     public float turnSpeed = 20f;
 
     private Rigidbody rb;
+    private LevelChanger sceneScript;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -50,6 +53,21 @@ public class CharacterMovement : MonoBehaviour
             Quaternion turn = Quaternion.LookRotation(dir.normalized);
 
             rb.MoveRotation(Quaternion.Lerp(rb.rotation, turn, Time.deltaTime * turnSpeed));
+        }
+    }
+
+    /// <summary>
+    /// Game Over when character touch Player
+    /// </summary>
+    /// <param name="other">Collider within character</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            sceneScript = GameObject.Find("SceneChanger").GetComponent<LevelChanger>();
+            movementSpeed = 0;
+            animator.SetTrigger("capturado");
+            sceneScript.FadeToBlack();
         }
     }
 }
