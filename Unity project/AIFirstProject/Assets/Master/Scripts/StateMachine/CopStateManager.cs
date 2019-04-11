@@ -70,6 +70,9 @@ public class CopStateManager : AIController
 
     //-----------------------------------------------------------------------------------------------
 
+    //Scene manager
+    private LevelChanger sceneChanger;
+
     #endregion
     private void Start()
     {
@@ -147,6 +150,18 @@ public class CopStateManager : AIController
 
         return new Vector3(x, y, z);
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            sceneChanger = FindObjectOfType<LevelChanger>();
+            sceneChanger.FadeToBlack();
+
+            anim.SetFloat("Speed", 0);
+            fsm.aiActive = false;
+        }
     }
 
     /// <summary>

@@ -5,16 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 public class PlayerInput : MonoBehaviour
 {
-    private PlayerController controller;
+    private PlayerController _controller;
+
+    public PlayerController controller { get { return _controller; } }
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<PlayerController>();
+        _controller = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        controller.SetInput(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        _controller.SetInput(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
 }

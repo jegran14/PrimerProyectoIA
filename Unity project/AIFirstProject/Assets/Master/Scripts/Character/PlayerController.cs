@@ -15,18 +15,27 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     //Input proporcionado por el PlayerInput
     private Vector3 moveInput;
+    //El jugador se puede mover o no
+    private bool _isEnabled;
+
+    public bool isEnabled { get { return _isEnabled; } set { _isEnabled = value; } }
 
     // Start is called before the first frame update
     void Start()
     {
         movementController = GetComponent<CharacterMovement>();
         anim = GetComponent<Animator>();
+
+        isEnabled = true;
     }
 
     private void FixedUpdate()
     {
-        Move();
-        Turn();
+        if(_isEnabled)
+        {
+            Move();
+            Turn();
+        }
     }
 
     public void SetInput(float _horizontal, float _vertical)

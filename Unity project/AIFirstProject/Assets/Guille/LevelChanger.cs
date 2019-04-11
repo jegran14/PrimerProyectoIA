@@ -7,19 +7,20 @@ public class LevelChanger : MonoBehaviour
     public bool victory;
     public int levelSelection;
     private int CurrentLevel;
-    private GameObject player;
+    private PlayerController player;
 
     void Start()
     {
         CurrentLevel = SceneManager.GetActiveScene().buildIndex;
-        player = GameObject.Find("Player");
+        player = GameObject.Find("Player").GetComponent<PlayerController>();
         victory = false;
         levelSelection = 1;
+        
     }
 
     public void FadeToBlack()
     {
-        player.GetComponent<CharacterMovement>().movementSpeed = 0;
+        player.isEnabled = false;
         animator.SetTrigger("FadeOut");
     }
 

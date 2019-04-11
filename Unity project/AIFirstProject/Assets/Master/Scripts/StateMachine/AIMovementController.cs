@@ -59,16 +59,16 @@ public class AIMovementController : MonoBehaviour
 
     private AIController _controller;
 
-    private CharacterMovement charMovement;
+    private CharacterMovement _charMovement;
 
     private void Start()
     {
-        charMovement = GetComponent<CharacterMovement>();
+        _charMovement = GetComponent<CharacterMovement>();
         _controller = GetComponent<AIController>();
 
         _sqrMoveThreshold = _pathUpdateThreshold * _pathUpdateThreshold;
         //La multiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
-        _globalCharacterRadius = _characterRadius * 2 * transform.localScale.x;
+        _globalCharacterRadius = _characterRadius * transform.localScale.x;
     }
 
     #region pathFindingFunctions
@@ -121,14 +121,14 @@ public class AIMovementController : MonoBehaviour
         //Direccion en la que seencuentra el siguiente punto a moverse
         Vector3 pathDir = _path.lookPoints[_pathIndex] - transform.position;
         //Direccion en la que va a tener que rotar  el personaje
-        Vector3 direction;
+        Vector3 turnDir;
         //Comprobar si el personaje va a collisionar
-        bool isColliding = TestObstacles(pathDir, out direction);
+        bool isColliding = TestObstacles(pathDir, out turnDir);
 
-        charMovement.Turn(direction, _turningSpeed); //Girarlo en a direccion de movimiento
+        _charMovement.Turn(turnDir, _turningSpeed); //Girarlo en a direccion de movimiento
         //Si la direccion de movimiento es contraia, no nos movemos, solo nos giramos hasta que estemos mirando en la direccion correcta
-        if(!testDirection(direction))
-            charMovement.Move(transform.forward, moveSpeed); //Mover personaje a la posicion que queremos
+        if(!testDirection(pathDir, 90))
+            _charMovement.Move(transform.forward, moveSpeed); //Mover personaje a la posicion que queremos
 
         isWalking = true;
     }
@@ -187,12 +187,13 @@ public class AIMovementController : MonoBehaviour
     /// Comprobar si la dirección de movimiento esta dentro del rango permitido
     /// </summary>
     /// <param name="dir">Direccion de movimiento</param>
+    /// <param name="dirAngle">Angulo sobre el que comprobar la direccion</param>
     /// <returns>Devuelve si se ha producido una colisión o no</returns>
-    private bool testDirection(Vector3 dir)
+    private bool testDirection(Vector3 dir, float dirAngle)
     {
         float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
         //Comprobar si la dirección de movimiento es contraria a la que está mirando el personaje
-        if (Mathf.Abs(angle) > 90f)
+        if (Mathf.Abs(angle) > dirAngle)
             return true;
 
         return false;
@@ -206,6 +207,12 @@ public class AIMovementController : MonoBehaviour
     /// <returns></returns>
     private bool TestObstacles(Vector3 dir, out Vector3 turnDir)
     {
+        if (testDirection(dir, 15))
+        {
+            turnDir = dir;
+            return false;
+        }
+
         float angle = Mathf.Asin(_globalCharacterRadius/_collisionDistance) * Mathf.Rad2Deg;
 
         //Calcular direcciones de los rayos
@@ -239,15 +246,18 @@ public class AIMovementController : MonoBehaviour
             if(_path != null)
                 _path.DrawWithGizmos();
 
-            float angle = Mathf.Atan(_globalCharacterRadius / _collisionDistance) * Mathf.Rad2Deg;
+            if(_controller != null)
+            {
+                float angle = Mathf.Atan(_globalCharacterRadius / _collisionDistance) * Mathf.Rad2Deg;
 
-            //Calcular direcciones de los rayos
-            Vector3 rightRayDir = _controller.DirFromAngle(angle, false);
-            Vector3 leftRayDir = _controller.DirFromAngle(-angle, false);
+                //Calcular direcciones de los rayos
+                Vector3 rightRayDir = _controller.DirFromAngle(angle, false);
+                Vector3 leftRayDir = _controller.DirFromAngle(-angle, false);
 
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + rightRayDir * _collisionDistance);
-            Gizmos.DrawLine(transform.position, transform.position + leftRayDir * _collisionDistance);
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, transform.position + rightRayDir * _collisionDistance);
+                Gizmos.DrawLine(transform.position, transform.position + leftRayDir * _collisionDistance);
+            }
         }
     }
 }
