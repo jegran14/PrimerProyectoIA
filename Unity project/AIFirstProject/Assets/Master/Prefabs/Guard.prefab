@@ -1096,7 +1096,7 @@ MonoBehaviour:
   _coneViewRadius: 5
   _coneViewAngle: 70
   _closeAreaRadius: 1
-  _alarmAreaRadius: 25
+  _alarmAreaRadius: 10
   _alarmState: {fileID: 11400000, guid: fdc0198f7f277ac4e982c9f97726498a, type: 2}
   _wayPoints: []
   _chasingMaxDistance: 15
