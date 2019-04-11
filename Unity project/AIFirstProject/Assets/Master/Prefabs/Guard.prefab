@@ -1024,6 +1024,7 @@ GameObject:
   - component: {fileID: 3493853598246572335}
   - component: {fileID: 4015137751603095015}
   - component: {fileID: 1015872316917969118}
+  - component: {fileID: 8557144426547248588}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -1086,12 +1087,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c6ed0892ccf41e49b2d709088a23c23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 1
+  viewMaxRadius: 3
+  viewMinRadius: 1
   viewAngle: 90
-  wayPointList: []
-  nextWayPoint: 0
+  wayPoints: []
+  chaseMaxDistace: 7
+  currentWayPoint: 0
   chaseTarget: {fileID: 0}
   fsm: {fileID: 0}
+  showGizmos: 1
+  turnDist: 3
 --- !u!114 &1015872316917969118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1108,6 +1113,20 @@ MonoBehaviour:
   aiActive: 1
   currentState: {fileID: 0}
   controller: {fileID: 0}
+--- !u!136 &8557144426547248588
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223030944943842237}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.6
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0.2}
 --- !u!1 &3237782199382456991
 GameObject:
   m_ObjectHideFlags: 0
