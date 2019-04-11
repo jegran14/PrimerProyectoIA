@@ -20,6 +20,7 @@ public class AIMovementController : MonoBehaviour
     [SerializeField] private float _turningSpeed = 5f;
     //-----------------------------------------------------------------------------------
     #endregion
+
     #region steeringBehaviorsProperties
     //----------------------- PROPIEDADES PARA LAS STEERING BEHAVIORS -------------------
     [Header("Propiedades steering behaviors")]
@@ -66,7 +67,7 @@ public class AIMovementController : MonoBehaviour
         _controller = GetComponent<AIController>();
 
         _sqrMoveThreshold = _pathUpdateThreshold * _pathUpdateThreshold;
-        //La moltiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
+        //La multiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
         _globalCharacterRadius = _characterRadius * 2 * transform.localScale.x;
     }
 
@@ -91,6 +92,7 @@ public class AIMovementController : MonoBehaviour
             float speed = (type == MovementTypes.Walk) ? _walkingSpeed : _runningSpeed;
             Move(speed);
         }
+        else isWalking = false;
     }
 
     /// <summary>
@@ -111,7 +113,6 @@ public class AIMovementController : MonoBehaviour
                 _pathIndex++;
                 if (_pathIndex > _path.finishLineIndex)
                 {
-                    isWalking = false;
                     return;
                 }
             }
@@ -235,7 +236,8 @@ public class AIMovementController : MonoBehaviour
     {
         if(showGizmos)
         {
-            _path.DrawWithGizmos();
+            if(_path != null)
+                _path.DrawWithGizmos();
 
             float angle = Mathf.Atan(_globalCharacterRadius / _collisionDistance) * Mathf.Rad2Deg;
 

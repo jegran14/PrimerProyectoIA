@@ -18,15 +18,18 @@ public class CopStateManager : AIController
     private StateMachine fsm;
     private AIMovementController movementController;
     //-----------------------------------------------------------------------------------
-
+    
+    #region characterParameters
     //-------------------------- Character parameters ----------------------------------
     [Header("Propiedades sensores")]
     [Tooltip("Radio del cono de vision (Distancia de vision)")]
     [SerializeField] private float _coneViewRadius = 5f;
     [Tooltip("Angulo del cono de vision")]
     [SerializeField] private float _coneViewAngle = 70f;
-    [Tooltip("Radio del area")]
+    [Tooltip("Radio del area de deteccion cercana")]
     [SerializeField] private float _closeAreaRadius = 1f;
+    [Tooltip("Radio del area de alarma del personaje")]
+    [SerializeField] private float _alarmAreaRadius = 25f;
 
     [Header("Propiedades patrulla")]
     [Tooltip("Puntos de ruta del personaje")]
@@ -43,6 +46,7 @@ public class CopStateManager : AIController
     //Centro del area de patrulla
     private Vector3 _patrolMiddlePoint;
     //-----------------------------------------------------------------------------------
+    #endregion
 
     #region gettersAndSetters
     //------------------------- SETTERS Y GETERS HEREDADOS DE LA CLASE PADRE -----------------------
@@ -51,6 +55,8 @@ public class CopStateManager : AIController
     public override float coneViewAngle => _coneViewAngle;
 
     public override float closeAreaRadius => _closeAreaRadius;
+
+    public override float alarmAreaRadius => _alarmAreaRadius;
 
     public override Transform[] wayPoints => _wayPoints;
 

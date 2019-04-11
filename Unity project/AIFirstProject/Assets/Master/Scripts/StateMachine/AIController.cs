@@ -9,6 +9,7 @@ public abstract class AIController : MonoBehaviour
     public abstract float coneViewRadius {get; }
     public abstract float coneViewAngle { get; }
     public abstract float closeAreaRadius { get; }
+    public abstract float alarmAreaRadius { get; }
     public abstract Transform[] wayPoints { get; }
     public abstract float chasingMaxDistance { get; }
     public abstract int currentWaypointIndex { get; set; }

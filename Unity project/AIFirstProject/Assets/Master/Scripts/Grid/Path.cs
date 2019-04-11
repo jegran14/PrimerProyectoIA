@@ -32,7 +32,6 @@ public class Path
 
     public void DrawWithGizmos()
     {
-
         Gizmos.color = Color.black;
         foreach (Vector3 p in lookPoints)
         {
@@ -44,7 +43,6 @@ public class Path
         {
             l.DrawWithGizmos(10);
         }
-
     }
 
 }
