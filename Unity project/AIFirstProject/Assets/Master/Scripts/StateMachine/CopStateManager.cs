@@ -30,6 +30,7 @@ public class CopStateManager : AIController
     [SerializeField] private float _closeAreaRadius = 1f;
     [Tooltip("Radio del area de alarma del personaje")]
     [SerializeField] private float _alarmAreaRadius = 25f;
+    [SerializeField] private State _alarmState;
 
     [Header("Propiedades patrulla")]
     [Tooltip("Puntos de ruta del personaje")]
@@ -149,7 +150,25 @@ public class CopStateManager : AIController
         z /= points.Length;
 
         return new Vector3(x, y, z);
+    }
 
+    /// <summary>
+    /// Mirar en un direccion a una posicion en el espacio tridimensional
+    /// </summary>
+    /// <param name="point">Punto al que  debe mirar el personaje</param>
+    public override void LookAt(Vector3 point)
+    {
+
+    }
+
+    /// <summary>
+    /// Recibir alarma de  otros guardias, o elementos
+    /// </summary>
+    /// <param name="targetPos">Posicion de la alarma</param>
+    public override void SetAlarm(Transform chaseTarget)
+    {
+        chasingTarget = chaseTarget;
+        TransitionToState(_alarmState);
     }
 
     private void OnTriggerEnter(Collider other)

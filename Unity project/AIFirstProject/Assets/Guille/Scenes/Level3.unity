@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2035111234}
-  m_IndirectSpecularColor: {r: 0.314012, g: 0.45423758, b: 0.75996673, a: 1}
+  m_IndirectSpecularColor: {r: 0.31416762, g: 0.4544921, b: 0.76045823, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -503,8 +503,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!54 &205238223
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -765,6 +763,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -803,6 +806,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 501418989}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 764308156}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -937,6 +950,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -975,6 +993,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 180639100}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 337224327}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -1022,8 +1050,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!54 &429994756
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1238,6 +1264,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -1276,6 +1307,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 233816925}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1612894821}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -1307,8 +1348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!114 &494488476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,6 +1573,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -1572,6 +1616,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1797132152}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1909593610}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -1603,8 +1657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!114 &624590428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1671,8 +1723,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!114 &707295783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1810,6 +1860,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -1868,6 +1923,26 @@ PrefabInstance:
       propertyPath: wayPoints.Array.data[7]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1208801195}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1455648884}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 1411467044}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 1647185578}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -2000,6 +2075,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -2038,6 +2118,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 308131051}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1464239519}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -2069,8 +2159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!114 &765283375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2192,6 +2280,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -2230,6 +2323,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1655642037}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 47959523}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -2332,6 +2435,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -2370,6 +2478,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1257884318}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1162260842}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -2417,8 +2535,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!54 &808027090
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2554,6 +2670,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -2592,6 +2713,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1121817343}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 362532200}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -2639,8 +2770,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!54 &901690561
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3398,8 +3527,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!114 &1363907265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3677,6 +3804,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -3715,6 +3847,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 832281362}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 2111643215}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -4054,8 +4196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!114 &1712782349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4239,6 +4379,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
+      propertyPath: _wayPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
       propertyPath: viewRadius
       value: 6
       objectReference: {fileID: 0}
@@ -4277,6 +4422,16 @@ PrefabInstance:
       propertyPath: chaseTarget
       value: 
       objectReference: {fileID: 42283264}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 109072612}
+    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
+        type: 3}
+      propertyPath: _wayPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1627809671}
     - target: {fileID: 1015872316917969118, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
       propertyPath: m_Enabled
@@ -4324,8 +4479,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  turnSpeed: 20
 --- !u!54 &1904685918
 Rigidbody:
   m_ObjectHideFlags: 0

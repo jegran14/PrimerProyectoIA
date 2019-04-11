@@ -30,16 +30,32 @@ public class State : ScriptableObject
         }
     }
 
+    /// <summary>
+    /// Comprobar transiciones del estado
+    /// </summary>
+    /// <param name="controller">Controlador de la IA</param>
     private void CheckTransiotions(AIController controller)
     {
+        //Comprobar todas las transiciones
         for(int i = 0; i < transitions.Length; i++)
         {
             bool transitionSucceded = transitions[i].decision.Decide(controller);
-
+            //Si la transicion es verdadera
             if (transitionSucceded)
+            {
+                //Realizar acciones necesarias para  la transicion
+                foreach (Action action in transitions[i].trueActions)
+                    action.Act(controller);
+                //Transicion 
                 controller.TransitionToState(transitions[i].trueState);
-            else
+            }
+            else //Si la transicion  es falsa
+            {
+                foreach (Action action in transitions[i].falseActions)
+                    action.Act(controller);
+
                 controller.TransitionToState(transitions[i].falseState);
+            }
         }
     }
 }

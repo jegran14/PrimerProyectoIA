@@ -21,8 +21,7 @@ public class DistanceDecision : Decision
     /// <returns></returns>
     private bool CalculateDistance(AIController controller)
     {
-        Vector3 characterPos = controller.transform.position;
-        float distance = Vector3.Distance(characterPos, controller.patrolMiddlePoint);
+        float distance = Vector3.Distance(controller.chasingTarget.position, controller.patrolMiddlePoint);
 
         bool isInDistance = false;
 

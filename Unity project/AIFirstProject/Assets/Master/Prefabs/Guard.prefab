@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 707295787}
   - component: {fileID: 1712782350}
   - component: {fileID: 1712782348}
-  - component: {fileID: 1712782349}
+  - component: {fileID: 7068121160595507817}
   m_Layer: 12
   m_Name: Guard
   m_TagString: Untagged
@@ -1097,8 +1097,9 @@ MonoBehaviour:
   _coneViewAngle: 70
   _closeAreaRadius: 1
   _alarmAreaRadius: 25
+  _alarmState: {fileID: 11400000, guid: fdc0198f7f277ac4e982c9f97726498a, type: 2}
   _wayPoints: []
-  _chasingMaxDistance: 10
+  _chasingMaxDistance: 15
 --- !u!114 &707295788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1114,7 +1115,7 @@ MonoBehaviour:
   showGizmos: 1
   isWalking: 1
   _walkingSpeed: 3
-  _runningSpeed: 8
+  _runningSpeed: 6
   _turningSpeed: 5
   _obstacleMask:
     serializedVersion: 2
@@ -1192,22 +1193,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6771bc1d478488541b2c864b7453254a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1712782349
-MonoBehaviour:
+--- !u!135 &7068121160595507817
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3223030944943842237}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1eace84d7c3b5444aa4b2f3e2ece679a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  speed: 3
-  turnDst: 5
-  turnSpeed: 3
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0.25, z: 0.25}
 --- !u!1 &3237782199382456991
 GameObject:
   m_ObjectHideFlags: 0

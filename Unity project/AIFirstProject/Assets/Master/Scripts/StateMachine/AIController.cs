@@ -20,7 +20,9 @@ public abstract class AIController : MonoBehaviour
 
     //---------------- FUNCIONES A IMPLEMENTAR DENTRO DE LOS CONTROLADORES HIJOS ---------------------------------------------------
     public abstract void MoveTo(Vector3 point, MovementTypes type); //Move character, every controller moves the character as they think they should
+    public abstract void LookAt(Vector3 point); //Mirar en un  punto en concreto
     public abstract void TransitionToState(State nextState); //Transicionar estado
+    public abstract void SetAlarm(Transform chaseTarget); //Recibir alarma de otros guardias
     public abstract bool IsAtTargetPos(); //Comprobar si la entidad se encuentra en el lugar desaeado
     //-------------------------------------------------------------------------------------------------------------------------------
 

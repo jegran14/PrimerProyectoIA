@@ -58,7 +58,6 @@ public class AIMovementController : MonoBehaviour
     #endregion
 
     private AIController _controller;
-
     private CharacterMovement _charMovement;
 
     private void Start()
@@ -85,9 +84,8 @@ public class AIMovementController : MonoBehaviour
     public void MoveTorwards(Vector3 position, MovementTypes type)
     {
         SetTarget(position);
- 
 
-        if (_path != null && (_pathIndex < _path.finishLineIndex || !_isWaitingForPath))
+        if (_path != null && (_pathIndex <= _path.finishLineIndex || !_isWaitingForPath))
         {
             float speed = (type == MovementTypes.Walk) ? _walkingSpeed : _runningSpeed;
             Move(speed);
@@ -96,7 +94,7 @@ public class AIMovementController : MonoBehaviour
     }
 
     /// <summary>
-    /// Realizarmovimiento del personaje
+    /// Realizar movimiento del personaje
     /// </summary>
     private void Move(float moveSpeed)
     {
@@ -125,9 +123,9 @@ public class AIMovementController : MonoBehaviour
         //Comprobar si el personaje va a collisionar
         bool isColliding = TestObstacles(pathDir, out turnDir);
 
-        _charMovement.Turn(turnDir, _turningSpeed); //Girarlo en a direccion de movimiento
+        _charMovement.Turn(pathDir, _turningSpeed); //Girarlo en a direccion de movimiento
         //Si la direccion de movimiento es contraia, no nos movemos, solo nos giramos hasta que estemos mirando en la direccion correcta
-        if(!testDirection(pathDir, 90))
+        if(!TestDirection(pathDir, 90))
             _charMovement.Move(transform.forward, moveSpeed); //Mover personaje a la posicion que queremos
 
         isWalking = true;
@@ -189,7 +187,7 @@ public class AIMovementController : MonoBehaviour
     /// <param name="dir">Direccion de movimiento</param>
     /// <param name="dirAngle">Angulo sobre el que comprobar la direccion</param>
     /// <returns>Devuelve si se ha producido una colisión o no</returns>
-    private bool testDirection(Vector3 dir, float dirAngle)
+    private bool TestDirection(Vector3 dir, float dirAngle)
     {
         float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
         //Comprobar si la dirección de movimiento es contraria a la que está mirando el personaje
@@ -207,7 +205,7 @@ public class AIMovementController : MonoBehaviour
     /// <returns></returns>
     private bool TestObstacles(Vector3 dir, out Vector3 turnDir)
     {
-        if (testDirection(dir, 15))
+        if (TestDirection(dir, 15))
         {
             turnDir = dir;
             return false;
