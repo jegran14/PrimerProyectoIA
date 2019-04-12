@@ -8,7 +8,7 @@ public class CharacterMovement : MonoBehaviour
     private Rigidbody rb;
     private LevelChanger sceneScript;
     private Animator animator;
-
+    
     // Start is called before the first frame update
     void Start()
     {
