@@ -498,7 +498,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   gridWorldSize: {x: 32, y: 32}
-  nodeRadius: 0.2
+  nodeRadius: 0.5
   walkableRegions: []
   obstacleProximityPenalty: 10
 --- !u!4 &485656126
@@ -672,11 +672,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
-        type: 3}
-      propertyPath: _wayPoints.Array.size
-      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4015137751603095015, guid: df87c4988945cc849a59cdb77f401ca9,
         type: 3}
