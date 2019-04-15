@@ -267,7 +267,7 @@ public class AIMovementController : MonoBehaviour
     {
         if(showGizmos)
         {
-            if (_path != null)
+            if (_path != null && _pathIndex < _path.lookPoints.Length)
             {
                 Gizmos.color = Color.black;
                 Gizmos.DrawLine(transform.position, _path.lookPoints[_pathIndex]);
