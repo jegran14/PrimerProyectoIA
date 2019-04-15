@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelChanger : MonoBehaviour
 {
+
     public Animator animator;
     public bool victory;
     public int levelSelection;
@@ -14,8 +15,7 @@ public class LevelChanger : MonoBehaviour
         CurrentLevel = SceneManager.GetActiveScene().buildIndex;
         player = GameObject.Find("Player").GetComponent<PlayerController>();
         victory = false;
-        levelSelection = 1;
-        
+        levelSelection = 1;      
     }
 
     public void FadeToBlack()

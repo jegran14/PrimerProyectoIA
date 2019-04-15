@@ -76,7 +76,7 @@ public class AIMovementController : MonoBehaviour
         //La multiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
         _globalCharacterRadius = _characterRadius * transform.localScale.x;
     }
-
+    
     #region pathFindingFunctions
     public void SetTarget(Vector3 target)
     {
