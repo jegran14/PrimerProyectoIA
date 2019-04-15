@@ -99,15 +99,8 @@ public class CopStateManager : AIController
     {
         movementController.MoveTorwards(position, movementType);
 
-        if (!movementController.isWalking)
-            anim.SetFloat("Speed", 0);
-        else
-        {
-            if (movementType == MovementTypes.Walk)
-                anim.SetFloat("Speed", 1);
-            else
-                anim.SetFloat("Speed", 2);
-        }
+        float speedPercentage = movementController.currentSpeed / movementController.movingSpeed;
+        anim.SetFloat("Speed", speedPercentage);
     }
 
     /// <summary>
