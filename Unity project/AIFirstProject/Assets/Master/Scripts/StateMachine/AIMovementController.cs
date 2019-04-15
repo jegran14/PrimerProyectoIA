@@ -13,21 +13,30 @@ public class AIMovementController : MonoBehaviour
     //------------------------- PROPIEDADES DE MOVIMIENTO -------------------------------
     [Header("Propiedas de movimiento")]
     [Tooltip("Velocidad de movimiento del personaje caminando")]
-    [SerializeField] private float _walkingSpeed = 3f;
+    [SerializeField] private float _movingSpeed = 3f;
+    public float movingSpeed { get { return _movingSpeed; } }
     [Tooltip("Velocidad de movimiento delpersonaje corriendo")]
-    [SerializeField] private float _runningSpeed = 8f;
+    [SerializeField] private float _runningMultiplier = 2f;
     [Tooltip("Velocidad a la que se gira el personaje")]
     [SerializeField] private float _turningSpeed = 5f;
-
-    [SerializeField] private float _maxAcceleration = 1f;
-    [SerializeField] private float _stoppingDistance = 0.5f;
-    [SerializeField] private float _slowDistanceRadius = 1f;
     //-----------------------------------------------------------------------------------
     #endregion
 
     #region steeringBehaviorsProperties
     //----------------------- PROPIEDADES PARA LAS STEERING BEHAVIORS -------------------
     [Header("Propiedades steering behaviors")]
+    [Tooltip("Porcentaje aplicado de la velocidad máxima")]
+    [SerializeField] private float _maxAcceleration = 1f;
+
+    private float _currentMaxAcceleration;
+    private Vector3 _currentVelocity;
+    public float currentSpeed { get { return _currentVelocity.magnitude; } }
+
+    [Tooltip("Distancia a la que el agente debe pararse")]
+    [SerializeField] private float _stoppingDistance = 0.5f;
+    [Tooltip("Distancia a la que el agente empieza a reducir la velocidad")]
+    [SerializeField] private float _slowDistanceRadius = 1f;
+
     [Tooltip("Máscara de los obstaculos para el personaje")]
     [SerializeField] private LayerMask _obstacleMask;
     [Tooltip("Radio de colisión del personaje")]
@@ -75,6 +84,7 @@ public class AIMovementController : MonoBehaviour
         _sqrMoveThreshold = _pathUpdateThreshold * _pathUpdateThreshold;
         //La multiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
         _globalCharacterRadius = _characterRadius * transform.localScale.x;
+        _currentMaxAcceleration = _maxAcceleration;
     }
     
     #region pathFindingFunctions
@@ -94,8 +104,8 @@ public class AIMovementController : MonoBehaviour
 
         if (_path != null && (_pathIndex <= _path.finishLineIndex || !_isWaitingForPath))
         {
-            float speed = (type == MovementTypes.Walk) ? _walkingSpeed : _runningSpeed;
-            Move(speed);
+            _currentMaxAcceleration = (type == MovementTypes.Walk) ? _maxAcceleration : _runningMultiplier;
+            Move();
         }
         else isWalking = false;
     }
@@ -103,7 +113,7 @@ public class AIMovementController : MonoBehaviour
     /// <summary>
     /// Realizar movimiento del personaje
     /// </summary>
-    private void Move(float moveSpeed)
+    private void Move()
     {
         Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
         /*
@@ -145,12 +155,13 @@ public class AIMovementController : MonoBehaviour
 
         Vector3 velocity = SeekBehavior(_path.lookPoints[_pathIndex]);
 
-        Vector3 newPos = _rb.position + velocity * moveSpeed * Time.deltaTime;
+        Vector3 newPos = _rb.position + velocity * _movingSpeed * Time.deltaTime;
         _rb.MovePosition(newPos);
 
         Quaternion newRotation = Quaternion.LookRotation(velocity.normalized);
         _rb.MoveRotation(Quaternion.Lerp(_rb.rotation, newRotation, _turningSpeed * Time.deltaTime));
 
+        _currentVelocity = velocity;
         isWalking = true;
     }
 
@@ -216,7 +227,7 @@ public class AIMovementController : MonoBehaviour
         Vector3 direction = target - transform.position;
         float distance = Vector3.Distance(target, transform.position);
 
-        return direction.normalized * _maxAcceleration;
+        return direction.normalized * _currentMaxAcceleration;
     }
 
     /// <summary>
