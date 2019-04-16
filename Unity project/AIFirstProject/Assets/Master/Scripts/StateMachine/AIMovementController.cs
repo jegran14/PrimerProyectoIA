@@ -225,7 +225,6 @@ public class AIMovementController : MonoBehaviour
         Vector3 direction = target - transform.position;
         float distance = Vector3.Distance(target, transform.position);
 
-
         Vector3 turnDir;
         //Calcular direcciones de los rayos
         Vector3 rightRayDir = _controller.DirFromAngle(_minWiskersAngle, false);
@@ -251,7 +250,11 @@ public class AIMovementController : MonoBehaviour
 
         //Si nb hay colision a la derecha pero si a la izquierda, asignar direccion de rotacion de la derecha
         if (!rightRayColision && leftRayColision)
+        {
+            float distanceToCollision = Vector3.Distance(transform.position, hitLeft.point) - _characterRadius;
+
             turnDir = rightRayDir;
+        }
         else  //En elcaso contrario devolver direccion de rotacion izquierda
             turnDir = leftRayDir;
 
