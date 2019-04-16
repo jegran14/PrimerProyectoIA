@@ -32,10 +32,12 @@ public class LookDecision : Decision
         {
             Transform target = targetsInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - controller.transform.position).normalized; //Calcular direccion al target
-            //Si el target esta dentro del angulo de vision procedemos a encontrar si hay algun obstaculo de por medio
-            if (Vector3.Angle(controller.transform.forward, dirToTarget) < controller.coneViewAngle / 2)
+            float distToTarget = Vector3.Distance(controller.transform.position, target.position); //Distancia hasta el target
+                                                                                                   //Si el target esta dentro del angulo de vision procedemos a encontrar si hay algun obstaculo de por medio
+
+            if (distToTarget < controller.closeAreaRadius || Vector3.Angle(controller.transform.forward, dirToTarget) < controller.coneViewAngle / 2)
             {
-                float distToTarget = Vector3.Distance(controller.transform.position, target.position); //Distancia hasta el target
+               
                 //Comprobar si entre la entidad y su objetivo hay algun obstaculo, si no hay ningun obstaculo, se le asigna al controller y devolvemos true
                 if (!Physics.Raycast(controller.transform.position, dirToTarget, distToTarget, obstacleMask))
                 {

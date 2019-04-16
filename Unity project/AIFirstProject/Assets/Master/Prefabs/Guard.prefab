@@ -1099,7 +1099,7 @@ MonoBehaviour:
   _alarmAreaRadius: 25
   _alarmState: {fileID: 11400000, guid: fdc0198f7f277ac4e982c9f97726498a, type: 2}
   _wayPoints: []
-  _chasingMaxDistance: 15
+  _chasingMaxDistance: 10
 --- !u!114 &707295788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1114,15 +1114,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showGizmos: 1
   isWalking: 1
-  _walkingSpeed: 3
-  _runningSpeed: 6
+  _movingSpeed: 3
+  _runningMultiplier: 2
   _turningSpeed: 5
+  _maxAcceleration: 1
+  _stoppingDistance: 0.5
+  _slowDistanceRadius: 1
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 512
   _characterRadius: 0.3
   _collisionDistance: 2
   _turnDist: 3
+  _pathIndex: 0
 --- !u!114 &707295781
 MonoBehaviour:
   m_ObjectHideFlags: 0
