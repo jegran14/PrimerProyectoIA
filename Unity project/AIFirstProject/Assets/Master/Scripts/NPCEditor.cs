@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(StateMachine))]
 public class NPCEditor : Editor
 {
@@ -36,4 +37,4 @@ public class NPCEditor : Editor
         }
     }
 }
- 
+#endif
