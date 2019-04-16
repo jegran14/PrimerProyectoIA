@@ -41,10 +41,19 @@ public class AIMovementController : MonoBehaviour
     [SerializeField] private LayerMask _obstacleMask;
     [Tooltip("Radio de colisión del personaje")]
     [SerializeField] private float _characterRadius = 0.3f;
-    //Radio del personaje en cordenadas globales
-    private float _globalCharacterRadius;
     [Tooltip("Angulo del cono para comprobar las colisiones")]
     [SerializeField] private float _collisionDistance = 1f;
+    //-----------------------------------------------------------------------------------
+
+    //------------------ PROPIEDADES DETECCION DE OBSTACULOS ----------------------------
+    //Radio del personaje en cordenadas globales
+    private float _globalCharacterRadius;
+    //Angulo de apertura minimo de los rayos para la colision en grados
+    private float _minWiskersAngle;
+    //Angulo actual de los rayos
+    private float _currentWiskersAngle;
+    //Ratio de cambio del angulo de los rayos laterales
+    private float _angleIncrement = 5f;
     //-----------------------------------------------------------------------------------
     #endregion
 
@@ -83,7 +92,11 @@ public class AIMovementController : MonoBehaviour
 
         _sqrMoveThreshold = _pathUpdateThreshold * _pathUpdateThreshold;
         //La multiplicacion por dos del radio al hacerlo global, es para añadirle un offset que nos ahorrara fallos de deteccion
-        _globalCharacterRadius = _characterRadius * transform.localScale.x;
+        _globalCharacterRadius = _characterRadius * 2 * transform.localScale.x;
+        //Calcular angulo minimo
+        _minWiskersAngle = Mathf.Asin(_globalCharacterRadius / _collisionDistance) * Mathf.Rad2Deg;
+        _currentWiskersAngle = _minWiskersAngle;
+
         _currentMaxAcceleration = _maxAcceleration;
     }
     
@@ -102,7 +115,7 @@ public class AIMovementController : MonoBehaviour
     {
         SetTarget(position);
 
-        if (_path != null && (_pathIndex <= _path.finishLineIndex || !_isWaitingForPath))
+        if (_path != null && (_pathIndex < _path.lookPoints.Length || !_isWaitingForPath))
         {
             _currentMaxAcceleration = (type == MovementTypes.Walk) ? _maxAcceleration : _runningMultiplier;
             Move();
@@ -115,24 +128,6 @@ public class AIMovementController : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        Vector2 pos2D = new Vector2(transform.position.x, transform.position.z);
-        /*
-        while (_path.turnBoundaries[_pathIndex].HasCrossedLine(pos2D) || Vector3.Distance(transform.position, _path.lookPoints[_pathIndex]) <= _stoppingDistance)
-        {
-            if (_pathIndex > _path.finishLineIndex)
-            {
-                return;
-            }
-            else
-            {
-                _pathIndex++;
-                if (_pathIndex > _path.finishLineIndex)
-                {
-                    return;
-                }
-            }
-        }*/
-
         if (Vector3.Distance(transform.position, _path.lookPoints[_pathIndex]) <= _stoppingDistance)
         {
             _pathIndex++;
@@ -141,27 +136,15 @@ public class AIMovementController : MonoBehaviour
                 return;
         }
 
-        /*//Direccion en la que seencuentra el siguiente punto a moverse
-        Vector3 pathDir = _path.lookPoints[_pathIndex] - transform.position;
-        //Direccion en la que va a tener que rotar  el personaje
-        Vector3 turnDir;
-        //Comprobar si el personaje va a collisionar
-        bool isColliding = TestObstacles(pathDir, out turnDir);
+        Vector3 seekVelocity = SeekBehavior(_path.lookPoints[_pathIndex]);
 
-        _charMovement.Turn(pathDir, _turningSpeed); //Girarlo en a direccion de movimiento
-        //Si la direccion de movimiento es contraia, no nos movemos, solo nos giramos hasta que estemos mirando en la direccion correcta
-        if(!TestDirection(pathDir, 90))
-            _charMovement.Move(transform.forward, moveSpeed); //Mover personaje a la posicion que queremos*/
-
-        Vector3 velocity = SeekBehavior(_path.lookPoints[_pathIndex]);
-
-        Vector3 newPos = _rb.position + velocity * _movingSpeed * Time.deltaTime;
+        Vector3 newPos = _rb.position + seekVelocity * _movingSpeed * Time.deltaTime;
         _rb.MovePosition(newPos);
 
-        Quaternion newRotation = Quaternion.LookRotation(velocity.normalized);
+        Quaternion newRotation = Quaternion.LookRotation(seekVelocity.normalized);
         _rb.MoveRotation(Quaternion.Lerp(_rb.rotation, newRotation, _turningSpeed * Time.deltaTime));
 
-        _currentVelocity = velocity;
+        _currentVelocity = seekVelocity;
         isWalking = true;
     }
 
@@ -231,35 +214,56 @@ public class AIMovementController : MonoBehaviour
     }
 
     /// <summary>
-    /// Comprobar si hay algun obstaculo en el camino
+    /// Calcular velocidad para evitar obstaculos
     /// </summary>
-    /// <param name="dir">Direccion en  la que se encuentra el proximo punto de ruta</param>
-    /// <param name="turnDir">Referencia al vector direccion para la rotacion</param>
-    /// <returns></returns>
-    private Vector3 AvoidObstacles(Vector3 dir)
+    /// <param name="target">Punto al que quere mover</param>
+    /// <returns>Velocidad a la que el personaje debe moverse para evitur los obstaculos</returns>
+    private Vector3 AvoidObstacles(Vector3 target)
     {
-        float angle = Mathf.Asin(_globalCharacterRadius/_collisionDistance) * Mathf.Rad2Deg;
+        target.y = transform.position.y;
+
+        Vector3 direction = target - transform.position;
+        float distance = Vector3.Distance(target, transform.position);
+
         Vector3 turnDir;
         //Calcular direcciones de los rayos
-        Vector3 rightRayDir = _controller.DirFromAngle(angle, false);
-        Vector3 leftRayDir = _controller.DirFromAngle(-angle, false);
-        //Relizar raycasts para comprobar si hay collision
-        bool rightRayColision = Physics.Raycast(transform.position, rightRayDir, _collisionDistance, _obstacleMask);
-        bool leftRayColision = Physics.Raycast(transform.position, leftRayDir, _collisionDistance, _obstacleMask);
+        Vector3 rightRayDir = _controller.DirFromAngle(_minWiskersAngle, false);
+        Vector3 leftRayDir = _controller.DirFromAngle(-_minWiskersAngle, false);
 
-        //Si no hay colision devolver direccion original
+        RaycastHit hitRight;
+        RaycastHit hitLeft;
+
+        //Relizar raycasts para comprobar si hay collision
+        bool rightRayColision = Physics.Raycast(transform.position, rightRayDir, out hitRight, _collisionDistance, _obstacleMask);
+        bool leftRayColision = Physics.Raycast(transform.position, leftRayDir, out hitLeft, _collisionDistance, _obstacleMask);
+
+        //Si no hay colision no devolver ninguna velocidad
         if(!rightRayColision && !leftRayColision) 
         {
-            return dir.normalized;
+            //Decrementar angulo de los rayos laterales
+            //_currentWiskersAngle -= _angleIncrement;
+            //Comprobar que  no  sobrepase el minimo
+            //_currentWiskersAngle = (_currentWiskersAngle < _minWiskersAngle) ? _minWiskersAngle : _currentWiskersAngle;
+
+            return Vector3.zero;
         }
 
         //Si nb hay colision a la derecha pero si a la izquierda, asignar direccion de rotacion de la derecha
         if (!rightRayColision && leftRayColision)
+        {
+            float distanceToCollision = Vector3.Distance(transform.position, hitLeft.point) - _characterRadius;
+
             turnDir = rightRayDir;
+        }
         else  //En elcaso contrario devolver direccion de rotacion izquierda
             turnDir = leftRayDir;
 
-        return turnDir;
+        //Incrementar  angulo de los rayos laterales
+        //_currentWiskersAngle += _angleIncrement;
+        //Comprobar que no se pase del maximo, en este  caso, 90 grados
+        //_currentWiskersAngle = (_currentWiskersAngle > 90f) ? 90f : _currentWiskersAngle;
+
+        return turnDir  * _maxAcceleration;
     }
     #endregion
 
@@ -276,15 +280,13 @@ public class AIMovementController : MonoBehaviour
 
             if(_controller != null)
             {
-                float angle = Mathf.Atan(_globalCharacterRadius / _collisionDistance) * Mathf.Rad2Deg;
-
                 //Calcular direcciones de los rayos
-                Vector3 rightRayDir = _controller.DirFromAngle(angle, false);
-                Vector3 leftRayDir = _controller.DirFromAngle(-angle, false);
+                Vector3 rightRayDir = _controller.DirFromAngle(_currentWiskersAngle, false);
+                Vector3 leftRayDir = _controller.DirFromAngle(-_currentWiskersAngle, false);
 
                 Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, transform.position + rightRayDir * _collisionDistance);
-                Gizmos.DrawLine(transform.position, transform.position + leftRayDir * _collisionDistance);
+                Gizmos.DrawLine(transform.position, transform.position + rightRayDir);
+                Gizmos.DrawLine(transform.position, transform.position + leftRayDir);
             }
         }
     }

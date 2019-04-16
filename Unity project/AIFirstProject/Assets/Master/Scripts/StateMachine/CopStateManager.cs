@@ -99,7 +99,7 @@ public class CopStateManager : AIController
     {
         movementController.MoveTorwards(position, movementType);
 
-        float speedPercentage = movementController.currentSpeed / movementController.movingSpeed;
+        float speedPercentage = movementController.currentSpeed/2;
         anim.SetFloat("Speed", speedPercentage);
     }
 
